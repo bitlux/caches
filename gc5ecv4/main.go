@@ -2,22 +2,21 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"net/http"
+
+	"github.com/bitlux/caches/util"
 )
 
-func main() {
-	resp, err := http.Get("http://techmanski.net/geocaching/GC5ECV4/longitude.txt")
-	if err != nil {
-		return
-	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-
+func sum(body []byte) int {
 	sum := 0
 	for _, b := range body {
 		sum += int(b) - 48
 	}
+	return sum
+}
 
-	fmt.Println(sum * 3)
+func main() {
+	lat := util.Wget("http://techmanski.net/geocaching/GC5ECV4/latitude.txt")
+	fmt.Println(sum(lat))
+	long := util.Wget("http://techmanski.net/geocaching/GC5ECV4/longitude.txt")
+	fmt.Println(sum(long) * 3)
 }
