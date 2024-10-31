@@ -12,7 +12,6 @@ const (
 	kP = "11860681821449926715169841912469"
 	kQ = "18527879236744611830104086196051"
 	e  = 65537
-	kD = "" // "126184528587175122480261596412119539466863565882428529250383873"
 )
 
 var ciphertexts = []string{
@@ -29,13 +28,6 @@ func strToInt(s string) *big.Int {
 	n, ok := new(big.Int).SetString(s, 10)
 	util.MustBool(ok)
 	return n
-}
-
-func getD(phi *big.Int) *big.Int {
-	if kD == "" {
-		return new(big.Int).ModInverse(big.NewInt(e), phi)
-	}
-	return strToInt(kD)
 }
 
 func decode(n *big.Int) string {
@@ -55,8 +47,7 @@ func main() {
 	q := strToInt(kQ)
 
 	phi := new(big.Int).Mul(new(big.Int).Sub(p, big.NewInt(1)), new(big.Int).Sub(q, big.NewInt(1)))
-	d := getD(phi)
-	fmt.Printf("d: %s\n", d)
+	d := new(big.Int).ModInverse(big.NewInt(e), phi)
 
 	for _, c := range ciphertexts {
 		m := new(big.Int).Exp(strToInt(c), d, n)
