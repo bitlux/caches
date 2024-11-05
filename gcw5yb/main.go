@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math/big"
+	"time"
 
 	"github.com/bitlux/caches/util"
 )
@@ -30,6 +32,34 @@ func strToInt(s string) *big.Int {
 	return n
 }
 
+func g(x *big.Int, n *big.Int) *big.Int {
+	return new(big.Int).Mod(new(big.Int).Add(new(big.Int).Mul(x, x), big.NewInt(1)), n)
+}
+
+func pollardRho(n *big.Int) (*big.Int, error) {
+	x := big.NewInt(2)
+	y := x
+	d := big.NewInt(1)
+
+	start := time.Now()
+
+	for i := 0; d.Cmp(big.NewInt(1)) == 0; i++ {
+		if i%1_000_000 == 0 {
+			fmt.Printf("\r%s: %d", time.Now().Format(time.DateTime), i)
+		}
+		x = g(x, n)
+		y = g(g(y, n), n)
+		d = new(big.Int).GCD(nil, nil, new(big.Int).Abs(new(big.Int).Sub(x, y)), n)
+	}
+
+	fmt.Printf("d = %s, took %s\n", d, time.Since(start))
+
+	if d.Cmp(n) == 0 {
+		return nil, errors.New("no non-trivial factor found")
+	}
+	return d, nil
+}
+
 func decode(n *big.Int) string {
 	m := big.NewInt(256)
 	s := ""
@@ -43,11 +73,21 @@ func decode(n *big.Int) string {
 
 func main() {
 	n := strToInt(kN)
-	p := strToInt(kP)
-	q := strToInt(kQ)
+	var p, q *big.Int
+	if kP == "" {
+		p, err := pollardRho(n)
+		util.Must(err)
+		q = new(big.Int).Div(n, p)
+		fmt.Printf("%s = %s * %s\n", n, p, q)
+	} else {
+		p = strToInt(kP)
+		q = strToInt(kQ)
+	}
 
 	phi := new(big.Int).Mul(new(big.Int).Sub(p, big.NewInt(1)), new(big.Int).Sub(q, big.NewInt(1)))
+	start := time.Now()
 	d := new(big.Int).ModInverse(big.NewInt(e), phi)
+	fmt.Println("inverse took ", time.Since(start))
 
 	for _, c := range ciphertexts {
 		m := new(big.Int).Exp(strToInt(c), d, n)
