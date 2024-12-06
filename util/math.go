@@ -1,6 +1,9 @@
 package util
 
 func Divisors(n int) []int {
+	if n == 1 {
+		return []int{1}
+	}
 	d := []int{1, n}
 	for i := 2; i <= n/2; i++ {
 		if n%i == 0 {
