@@ -19,7 +19,7 @@ func main() {
 			n, err := strconv.Atoi(string(candidate))
 			util.Must(err)
 
-			if len(util.Divisors(n)) == 2 {
+			if util.IsPrime(n) {
 				fmt.Print(n)
 				break
 			}
