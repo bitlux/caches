@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"slices"
 	"time"
 
 	"github.com/bitlux/caches/util"
@@ -62,13 +63,14 @@ func pollardRho(n *big.Int) (*big.Int, error) {
 
 func decode(n *big.Int) string {
 	m := big.NewInt(256)
-	s := ""
+	var runes []rune
 	for n.Cmp(big.NewInt(1)) == 1 {
 		c := new(big.Int).Mod(n, m)
-		s = string(c.Int64()) + s
+		runes = append(runes, rune(c.Int64()))
 		n.Div(n, m)
 	}
-	return s
+	slices.Reverse(runes)
+	return string(runes)
 }
 
 func main() {
