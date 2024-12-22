@@ -9,7 +9,7 @@ func Factor(n int) []int {
 	if n < 2 {
 		Must(errors.New("can only factor integers > 1"))
 	}
-	factors := []int{}
+	var factors []int
 	for i := 2; i <= n; {
 		if n%i == 0 {
 			factors = append(factors, i)
@@ -29,7 +29,7 @@ func IsPrime(n int) bool {
 }
 
 func Digits(n int) []int {
-	d := []int{}
+	var d []int
 	for n > 0 {
 		d = append(d, n%10)
 		n /= 10
