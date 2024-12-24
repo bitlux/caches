@@ -14,7 +14,7 @@ func Wget(url string) []byte {
 	res.Body.Close()
 	Must(err)
 	if res.StatusCode > 299 {
-		Must(fmt.Errorf("Fail: status code %d", res.StatusCode))
+		Must(fmt.Errorf("fail: status code %d", res.StatusCode))
 	}
 	return body
 }
