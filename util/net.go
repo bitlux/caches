@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// Wget fetches the named URL and returns its contents. It exits on any error.
 func Wget(url string) []byte {
 	res, err := http.Get(url)
 	Must(err)

@@ -5,6 +5,7 @@ import (
 	"slices"
 )
 
+// Factor returns the prime factors of n. n must be greater than 1.
 func Factor(n int) []int {
 	if n < 2 {
 		Must(errors.New("can only factor integers > 1"))
@@ -21,6 +22,7 @@ func Factor(n int) []int {
 	return factors
 }
 
+// IsPrime returns whether n is prime.
 func IsPrime(n int) bool {
 	if n == 1 {
 		return false
@@ -28,6 +30,7 @@ func IsPrime(n int) bool {
 	return len(Factor(n)) == 1
 }
 
+// Digits returns a slice of the digits of n. Digits(1234) returns [1 2 3 4].
 func Digits(n int) []int {
 	var d []int
 	for n > 0 {
