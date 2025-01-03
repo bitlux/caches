@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// Must prints err and exits if err is not nil.
 func Must(err error) {
 	if err != nil {
 		fmt.Println(err)
@@ -12,6 +13,7 @@ func Must(err error) {
 	}
 }
 
+// MustBool exits if b is false.
 func MustBool(b bool) {
 	if !b {
 		fmt.Println("unexpected false value")
