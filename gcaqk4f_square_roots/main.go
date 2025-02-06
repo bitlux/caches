@@ -21,7 +21,7 @@ func main() {
 	)
 	sum := 0
 
-	n := sqroot.Sqrt(2)
+	n = sqroot.Sqrt(2)
 	for index, value := range n.All() {
 		sum += value
 		if index >= length {
