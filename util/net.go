@@ -19,3 +19,9 @@ func Wget(url string) []byte {
 	}
 	return body
 }
+
+func ResponseCode(url string) int {
+	res, err := http.Get(url)
+	Must(err)
+	return res.StatusCode
+}
