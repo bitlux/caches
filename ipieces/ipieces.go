@@ -12,7 +12,7 @@
 //
 //	func main() {
 //	  p := ipieces.Puzzle{
-//	 	  Final: []ipieces.Digit{
+//	    Final: []ipieces.Digit{
 //	      ipieces.Digit{Value: "3", Status: ipieces.VISIBLE}
 //	      ipieces.Digit{Value: "7", Status: ipieces.VISIBLE}
 //	      ipieces.Digit{Value: "2", Status: ipieces.VISIBLE}
@@ -41,9 +41,9 @@
 //	}
 //
 // [Puzzle.Run] creates two handlers:
-//   - a text endpoint at `/text` which responds with a short plaintext page with the client's IP,
+//   - a text endpoint at /text which responds with a short plaintext page with the client's IP,
 //     the computed index into the final coordinates, and the revealed coordinate, and
-//   - a default endpoint, which serves any path other than `/text`, and responds with an HTML page.
+//   - a default endpoint, which serves any path other than /text, and responds with an HTML page.
 package ipieces
 
 import (
