@@ -205,7 +205,7 @@ func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.
 	d, err := p.dataFromReq(req)
 	fmt.Printf("IP %s index %d\n", d.IP, d.Index)
 	if err != nil {
-		writeResponse(w, http.StatusInternalServerError, errorPage, "dataFromReq failed: %v", err)
+		writeResponse(w, http.StatusInternalServerError, errorPage, "dataFromReq failed: %v\n", err)
 		return
 	}
 
@@ -213,11 +213,11 @@ func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.
 		resp, err := p.Client.Query(d.IP)
 		if err != nil {
 			if err == vpnapi.ErrRateLimited {
-				writeResponse(w, http.StatusTooManyRequests, rateLimitPage, "rate limited: %v", err)
+				writeResponse(w, http.StatusTooManyRequests, rateLimitPage, "rate limited: %v\n", err)
 				return
 			}
 			// TODO: This fails closed. This may be too strict, especially if vpnapi.io is unreliable.
-			writeResponse(w, http.StatusInternalServerError, errorPage, "Query failed: %v", err)
+			writeResponse(w, http.StatusInternalServerError, errorPage, "Query failed: %v\n", err)
 			return
 		}
 
@@ -228,9 +228,7 @@ func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.
 	}
 
 	if err := tmpl.Execute(w, d); err != nil {
-		fmt.Println("tmpl.Execute failed:", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, errorPage)
+		writeResponse(w, http.StatusInternalServerError, errorPage, "tmpl.Execute failed: %v\n", err)
 		return
 	}
 }
@@ -245,10 +243,14 @@ func (p Puzzle) Run() {
 	})
 	http.HandleFunc("/style.css", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/css; charset=utf-8")
-		io.WriteString(w, stylesheet)
+		if _, err := io.WriteString(w, stylesheet); err != nil {
+			fmt.Println("WriteString failed:", err)
+		}
 	})
 	http.HandleFunc("/lights.gif", func(w http.ResponseWriter, _ *http.Request) {
-		io.WriteString(w, lights)
+		if _, err := io.WriteString(w, lights); err != nil {
+			fmt.Println("WriteString failed:", err)
+		}
 	})
 
 	for _, d := range p.Final {
