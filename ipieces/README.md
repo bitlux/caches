@@ -4,7 +4,7 @@ ipieces is a Go package used to create Geocaching puzzles such as [GCB1ZXB](http
 
 ## Documentation
 
-Available at https://pkg.go.dev/github/bitlux/caches/ipieces.
+Available at https://pkg.go.dev/github.com/bitlux/caches/ipieces.
 
 ## Deployment instructions
 
