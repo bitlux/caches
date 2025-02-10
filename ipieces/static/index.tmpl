@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>IPieces of the puzzle</title>
+    <link rel="shortcut icon" href="https://bitlux.github.io/favicon.ico" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div>
+      Your IP address is<br>
+      <span class="mono">{{.IP}}</span>
+{{ comment .IP .Hash .Index }}
+    </div>
+    <div>
+      Your piece of the puzzle is<br>
+      <span class="mono">
+      N<span class="small"> </span>{{index .Digits 0 | format}}{{index .Digits 1 | format}}&deg;<span class="small"> </span>{{index .Digits 2 | format}}{{index .Digits 3 | format}}.{{index .Digits 4 | format}}{{index .Digits 5 | format}}{{index .Digits 6 | format}}
+      W<span class="small"> </span>{{index .Digits 7 | format}}{{index .Digits 8 | format}}{{index .Digits 9 | format}}&deg;<span class="small"> </span>{{index .Digits 10 | format}}{{index .Digits 11 | format}}.{{index .Digits 12 | format}}{{index .Digits 13 | format}}{{index .Digits 14 | format}}
+      </span>
+    </div>
+    <div>
+      <span class="linkback">
+        <a class="coord" href="http://coord.info/{{.GCCode}}">{{.GCCode}}</a>
+      </span>
+    </div>
+  </body>
+</html>

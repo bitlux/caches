@@ -1,0 +1,55 @@
+body {
+  font-size: 40px;
+  text-align: center;
+  color: #101010;
+  background: #d0e6ff;
+  font-family: Verdana, Tahoma, sans-serif;
+  line-height: 1.5;
+}
+
+/*** other body styles ***/
+body.yellow {
+  background: #f3d104;
+}
+
+body.red {
+  background: #d61111;
+  font-size: 60px;
+}
+
+div {
+  padding-top: 1em;
+}
+
+/*** spans ***/
+
+.mono {
+  font-size: 45px;
+  font-family: Monaco, monospace;
+  letter-spacing: 2px;
+}
+
+/* used for spacing */
+.small {
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.underline {
+  margin: 0 3px;
+  text-decoration: 4px #101010 underline;
+}
+
+span.red {
+  margin: 0 3px;
+  text-decoration: 4px #ff0000 underline;
+}
+
+.linkback {
+  padding-top: 30px;
+  font-size: 16px;
+}
+
+img {
+  padding: 0 20px;
+}
