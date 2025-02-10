@@ -1,3 +1,5 @@
+github.com/bitlux/vpnapi v0.0.0-20250207215125-f066bb2314a4 h1:zYVWlKFsyl3tMu3Ak9es+EMW2DUe9nqPQaOQNBtu2XQ=
+github.com/bitlux/vpnapi v0.0.0-20250207215125-f066bb2314a4/go.mod h1:ou6ccQPRIv8uzPNeLaRLxnwd2felkT30fwGnJtbVYCg=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/keep94/consume2 v0.7.0 h1:JbS/XxmPbHgEG+1pvGEGc192nCOEx+S/DmJBZz9fkvQ=

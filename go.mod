@@ -1,7 +1,10 @@
 module github.com/bitlux/caches
 
-go 1.23
+go 1.23.4
 
 require github.com/keep94/sqroot/v3 v3.7.2
 
-require github.com/keep94/consume2 v0.7.0 // indirect
+require (
+	github.com/bitlux/vpnapi v0.0.0-20250207215125-f066bb2314a4 // indirect
+	github.com/keep94/consume2 v0.7.0 // indirect
+)
