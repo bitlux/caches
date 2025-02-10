@@ -193,13 +193,19 @@ func (d *data) flip() {
 	}
 }
 
+func writeResponse(w http.ResponseWriter, code int, body string, format string, args ...any) {
+	fmt.Printf(format, args...)
+	w.WriteHeader(code)
+	if _, err := io.WriteString(w, body); err != nil {
+		fmt.Println("WriteString failed:", err)
+	}
+}
+
 func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.Template) {
 	d, err := p.dataFromReq(req)
 	fmt.Printf("IP %s index %d\n", d.IP, d.Index)
 	if err != nil {
-		fmt.Println("dataFromReq failed:", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, errorPage)
+		writeResponse(w, http.StatusInternalServerError, errorPage, "dataFromReq failed: %v", err)
 		return
 	}
 
@@ -207,22 +213,16 @@ func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.
 		resp, err := p.Client.Query(d.IP)
 		if err != nil {
 			if err == vpnapi.ErrRateLimited {
-				fmt.Println("rate limited:", err)
-				w.WriteHeader(http.StatusInternalServerError)
-				io.WriteString(w, rateLimitPage)
+				writeResponse(w, http.StatusTooManyRequests, rateLimitPage, "rate limited: %v", err)
 				return
 			}
 			// TODO: This fails closed. This may be too strict, especially if vpnapi.io is unreliable.
-			fmt.Println("Query failed:", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, errorPage)
+			writeResponse(w, http.StatusInternalServerError, errorPage, "Query failed: %v", err)
 			return
 		}
 
 		if resp.Security.VPN || resp.Security.Proxy || resp.Security.Tor || resp.Security.Relay {
-			fmt.Printf("%t %t %t %t\n", resp.Security.VPN, resp.Security.Proxy, resp.Security.Tor, resp.Security.Relay)
-			w.WriteHeader(http.StatusForbidden)
-			io.WriteString(w, vpnPage)
+			writeResponse(w, http.StatusForbidden, vpnPage, "%t %t %t %t\n", resp.Security.VPN, resp.Security.Proxy, resp.Security.Tor, resp.Security.Relay)
 			return
 		}
 	}
