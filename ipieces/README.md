@@ -1,6 +1,7 @@
 # ipieces
 
-ipieces is a Go package used to create Geocaching puzzles such as [GCB1ZXB](https://coord.info/GCB1ZXB).
+ipieces is a Go package used to create Geocaching puzzles such as
+[GCB1ZXB](https://coord.info/GCB1ZXB).
 
 ## Documentation
 
@@ -8,15 +9,19 @@ Available at https://pkg.go.dev/github.com/bitlux/caches/ipieces.
 
 ## Deployment instructions
 
-I deploy on [Google Cloud Run](https://cloud.google.com/run). To do that, you must first sign
-into the [Google Cloud console](https://console.cloud.google.com/),
-[create a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects), and have
-[`gcloud`](https://cloud.google.com/sdk) installed.
+I deploy on [Google Cloud Run](https://cloud.google.com/run).
+https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-go-service is a good
+reference on how to us Google Cloud Run.
+
+Create a directory for your project and put your code in a file named `main.go`. Run
+`go mod init <module name>` to create a module (because your `main.go` imports packages outside the
+standard library, Google Cloud Run requires it to be in its own module).
 
 To deploy, `cd` to the directory with your `main.go` file and run:
 ```
-gcloud run deploy --source . <project> [--allow-unauthenticated]
+gcloud run deploy --source . <service> [--allow-unauthenticated]
 ```
+where `<service>` is any name you want.
 
 ## Testing
 
