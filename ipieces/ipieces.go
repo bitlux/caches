@@ -211,6 +211,9 @@ func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.
 
 	if p.Client != nil {
 		resp, err := p.Client.Query(d.IP)
+		if resp.Message != "" {
+			fmt.Println("Response message:", resp.Message)
+		}
 		if err != nil {
 			if err == vpnapi.ErrRateLimited {
 				writeResponse(w, http.StatusTooManyRequests, rateLimitPage, "rate limited: %v\n", err)
@@ -222,7 +225,7 @@ func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.
 		}
 
 		if resp.Security.VPN || resp.Security.Proxy || resp.Security.Tor || resp.Security.Relay {
-			writeResponse(w, http.StatusForbidden, vpnPage, "%t %t %t %t\n", resp.Security.VPN, resp.Security.Proxy, resp.Security.Tor, resp.Security.Relay)
+			writeResponse(w, http.StatusForbidden, vpnPage, "VPN: %t Proxy: %t Tor: %t Relay: %t\n", resp.Security.VPN, resp.Security.Proxy, resp.Security.Tor, resp.Security.Relay)
 			return
 		}
 	}
