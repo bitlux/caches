@@ -46,8 +46,11 @@ div {
 
 span.red {
   margin: 0 3px;
-  text-decoration: underline #ff0000 solid 4px;
-  -webkit-text-decoration: underline #ff0000 solid 4px !important;
+  text-decoration: underline #ff0000 solid 4px !important;
+  -webkit-text-decoration-line: underline !important;
+  -webkit-text-decoration-color: #ff0000 !important;
+  -webkit-text-decoration-style: solid !important;
+  -webkit-text-decoration-thickness: 4px !important;
 }
 
 .linkback {
