@@ -37,12 +37,12 @@ div {
 
 .underline {
   margin: 0 3px;
-  text-decoration: 4px #101010 underline;
+  text-decoration: underline #101010 solid 4px;
 }
 
 span.red {
   margin: 0 3px;
-  text-decoration: 4px #ff0000 underline;
+  text-decoration: underline #ff0000 solid 4px;
 }
 
 .linkback {
