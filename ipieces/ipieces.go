@@ -211,9 +211,7 @@ func (p Puzzle) handle(w http.ResponseWriter, req *http.Request, tmpl *template.
 
 	if p.Client != nil {
 		resp, err := p.Client.Query(d.IP)
-		if resp.Message != "" {
-			fmt.Println("Response message:", resp.Message)
-		}
+		fmt.Println(resp)
 		if err != nil {
 			if err == vpnapi.ErrRateLimited {
 				writeResponse(w, http.StatusTooManyRequests, rateLimitPage, "rate limited: %v\n", err)
