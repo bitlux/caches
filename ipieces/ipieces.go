@@ -62,7 +62,7 @@ import (
 )
 
 // TODO: All logging is printed to stdout. This is fine for Google Cloud Run,
-// but consider using log/slog.
+// but consider using log/slog. https://github.com/bitlux/caches/issues/53
 
 func init() {
 	hostname, _ := os.Hostname()
