@@ -2,8 +2,9 @@ name: golangci-lint
 on:
   push:
     branches: [ "dev" ]
-  pull_request:
-    branches: [ "master" ]
+  # I think this is causing #38.
+  # pull_request:
+    # branches: [ "master" ]
 
 permissions:
   contents: read
