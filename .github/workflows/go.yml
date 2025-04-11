@@ -6,8 +6,9 @@ name: Go
 on:
   push:
     branches: [ "master", "dev" ]
-  pull_request:
-    branches: [ "master", "dev"]
+  # I think this is causing #38.
+  # pull_request:
+    # branches: [ "master", "dev"]
 
 jobs:
 
