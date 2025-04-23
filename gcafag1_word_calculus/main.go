@@ -102,7 +102,7 @@ func median(s string) float64 {
 }
 
 func main() {
-	lines := util.ReadLines("/home/abender/Adam/projects/wordlist-20210729.txt")
+	lines := util.ReadLines("../wordlist-20210729.txt")
 	for _, word := range lines {
 		if len(word) == 4 && isAllOnes(word) && sum(word) == 58 && Range(word) == 15 {
 			fmt.Println("[2]", word)
