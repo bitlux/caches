@@ -1,5 +1,3 @@
-github.com/bitlux/vpnapi v0.0.0-20250217222132-63c262807319 h1:wfPTZ1VuQP/IecBGOW+2sNAzqd5hdRdU5+Wh14jiho4=
-github.com/bitlux/vpnapi v0.0.0-20250217222132-63c262807319/go.mod h1:ou6ccQPRIv8uzPNeLaRLxnwd2felkT30fwGnJtbVYCg=
 github.com/bitlux/vpnapi v0.0.0-20250308212757-c8443b09b42b h1:30NFRq5CBKPVH9FeY4iZneuXXO8vwte/K7gUn3QvjrM=
 github.com/bitlux/vpnapi v0.0.0-20250308212757-c8443b09b42b/go.mod h1:ou6ccQPRIv8uzPNeLaRLxnwd2felkT30fwGnJtbVYCg=
 github.com/d4l3k/go-bfloat16 v0.0.0-20211005043715-690c3bdd05f1 h1:cBzrdJPAFBsgCrDPnZxlp1dF2+k4r1kVpD7+1S1PVjY=
