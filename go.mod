@@ -8,4 +8,8 @@ require (
 	github.com/keep94/sqroot/v3 v3.7.2
 )
 
-require github.com/keep94/consume2 v0.7.0 // indirect
+require (
+	github.com/gnboorse/centipede v1.0.2 // indirect
+	github.com/keep94/consume2 v0.7.0 // indirect
+	golang.org/x/exp v0.0.0-20220318154914-8dddf5d87bd8 // indirect
+)
