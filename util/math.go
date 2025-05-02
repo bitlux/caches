@@ -2,6 +2,8 @@ package util
 
 import (
 	"errors"
+	"fmt"
+	"maps"
 	"slices"
 )
 
@@ -39,4 +41,22 @@ func Digits(n int) []int {
 	}
 	slices.Reverse(d)
 	return d
+}
+
+// RuneCount returns a map containing each rune in s and how many times it occurs.
+func RuneCount(s string) map[rune]int {
+	ret := map[rune]int{}
+	for _, r := range s {
+		ret[r]++
+	}
+	return ret
+}
+
+// PrintIncreasing prints the keys and values in the map in increasing order of the keys.
+func PrintIncreasing(m map[rune]int) {
+	// TODO: use generics. May not be possible to print a rune as a char with %v.
+	keys := slices.Sorted(maps.Keys(m))
+	for _, k := range keys {
+		fmt.Printf("%c: %d\n", k, m[k])
+	}
 }

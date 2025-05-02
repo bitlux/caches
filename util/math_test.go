@@ -1,6 +1,7 @@
 package util
 
 import (
+	"maps"
 	"slices"
 	"testing"
 )
@@ -55,5 +56,14 @@ func TestDigits(t *testing.T) {
 		if !slices.Equal(got, test.digits) {
 			t.Errorf("Digits(%d): got: %v, want: %v", test.n, got, test.digits)
 		}
+	}
+}
+
+func TestRuneCount(t *testing.T) {
+	s := "bitloox"
+	m := RuneCount(s)
+	want := map[rune]int{'b': 1, 'i': 1, 't': 1, 'l': 1, 'o': 2, 'x': 1}
+	if !maps.Equal(m, want) {
+		t.Errorf("RunCount(%q): got %v, want %v", s, m, want)
 	}
 }
