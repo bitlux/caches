@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+
+	"golang.org/x/exp/constraints"
 )
 
 // Factor returns the prime factors of n. n must be greater than 1.
@@ -58,5 +60,18 @@ func PrintIncreasing(m map[rune]int) {
 	keys := slices.Sorted(maps.Keys(m))
 	for _, k := range keys {
 		fmt.Printf("%c: %d\n", k, m[k])
+	}
+}
+
+// A1Z26 enciphers and deciphers an integer (representing either an ordinal in the range [1, 26] or
+// an ASCII code point) using the A=1, ..., Z=26 substitution cipher.
+func A1Z26[T constraints.Integer](n T) T {
+	switch {
+	case n < 27:
+		return n + 'A' - 1
+	case n < 91:
+		return n - 'A' + 1
+	default:
+		return n - 'a' + 1
 	}
 }
