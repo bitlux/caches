@@ -67,3 +67,20 @@ func TestRuneCount(t *testing.T) {
 		t.Errorf("RunCount(%q): got %v, want %v", s, m, want)
 	}
 }
+
+func TestA1Z26(t *testing.T) {
+	for _, tc := range []struct {
+		n, want int
+	}{
+		{'a', 1},
+		{'A', 1},
+		{1, 'A'},
+		{'z', 26},
+		{'Z', 26},
+		{26, 'Z'},
+	} {
+		if got := A1Z26(tc.n); got != tc.want {
+			t.Errorf("A1Z26(%d): got %d, want %d", tc.n, got, tc.want)
+		}
+	}
+}
