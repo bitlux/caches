@@ -13,3 +13,5 @@ require (
 	github.com/keep94/consume2 v0.7.0 // indirect
 	golang.org/x/exp v0.0.0-20220318154914-8dddf5d87bd8 // indirect
 )
+
+replace github.com/gnboorse/centipede => /home/abender/Adam/projects/github.com/gnboorse/centipede
