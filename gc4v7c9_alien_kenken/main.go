@@ -116,18 +116,17 @@ func main() {
 	}
 
 	// TODO: remove
-	for _, row := range []int{1, 5, 9} {
+	for _, row := range []int{ /*1, 5, */ 9} {
 		var inRow []centipede.VariableName
 		for col := range SIZE {
 			inRow = append(inRow, pair(row, col+1))
 		}
-		fmt.Println(inRow)
 		constraints = append(constraints, centipede.AllUnique[int](inRow...)...)
 	}
 
 	for row := range SIZE {
 		var inCol []centipede.VariableName
-		for _, col := range []int{1, 5, 9} {
+		for _, col := range []int{1 /*5,*/, 9} {
 			inCol = append(inCol, pair(row+1, col))
 		}
 		constraints = append(constraints, centipede.AllUnique[int](inCol...)...)
@@ -139,24 +138,26 @@ func main() {
 		target int
 		names  centipede.VariableNames
 	}{
-		{clubs, 237, centipede.VariableNames{"A1", "B1", "C1", "A2", "A3"}},
-		{diamonds, 29, centipede.VariableNames{"D1", "E1", "F1"}},
-		{diamonds, 72, centipede.VariableNames{"G1", "H1", "I1", "I2", "I3"}},
+		//		{clubs, 237, centipede.VariableNames{"A1", "B1", "C1", "A2", "A3"}},
+		//		{diamonds, 29, centipede.VariableNames{"D1", "E1", "F1"}},
+		//		{diamonds, 72, centipede.VariableNames{"G1", "H1", "I1", "I2", "I3"}},
 
 		//		{hearts, 36, centipede.VariableNames{"B2", "C2", "D2", "B3", "B4"}},
-		// redundant
+		// redundant with domain
 		//		{diamonds, 13, centipede.VariableNames{"E2", "E3"}},
 		//		{hearts, 34, centipede.VariableNames{"F2", "G2", "H2", "H3", "H4"}},
 
 		//		{hearts, 39, centipede.VariableNames{"C3", "D3", "C4", "D4"}},
 		//		{diamonds, 20, centipede.VariableNames{"F3", "G3", "F4", "G4"}},
 
-		{hearts, 9, centipede.VariableNames{"A4", "A5", "A6"}},
-		{spades, 104, centipede.VariableNames{"E4", "D5", "E5", "F5", "E6"}},
-		{hearts, 18, centipede.VariableNames{"I4", "I5", "I6"}},
+		//	{hearts, 9, centipede.VariableNames{"A4", "A5", "A6"}},
+		// {spades, 104, centipede.VariableNames{"E4", "D5", "E5", "F5", "E6"}},
+		//		{hearts, 18, centipede.VariableNames{"I4", "I5", "I6"}},
 
-		{clubs, 34, centipede.VariableNames{"B5", "C5"}},
-		{spades, 15, centipede.VariableNames{"G5", "H5"}},
+		// redundant with domain
+		// {clubs, 34, centipede.VariableNames{"B5", "C5"}},
+		// redundant with domain
+		// {spades, 15, centipede.VariableNames{"G5", "H5"}},
 
 		//	{clubs, 130, centipede.VariableNames{"B6", "B7", "B8", "C8", "D8"}},
 		//	{spades, 21, centipede.VariableNames{"C6", "D6", "C7", "D7"}},
@@ -164,7 +165,7 @@ func main() {
 		//	{clubs, 91, centipede.VariableNames{"H6", "H7", "F8", "G8", "H8"}},
 
 		{diamonds, 84, centipede.VariableNames{"A7", "A8", "A9", "B9", "C9"}},
-		// redundant
+		// redundant with domain
 		// {hearts, 28, centipede.VariableNames{"E7", "E8"}},
 		{hearts, 35, centipede.VariableNames{"I7", "I8", "G9", "H9", "I9"}},
 
@@ -205,21 +206,21 @@ func main() {
 	vars.SetDomain("D1", centipede.Domain[int]{2, 3, 6})
 	vars.SetDomain("E1", centipede.Domain[int]{3, 6})
 	vars.SetDomain("F1", centipede.Domain[int]{2, 3, 6})
-	vars.SetDomain("G1", centipede.Domain[int]{4, 7, 8})
-	vars.SetDomain("H1", centipede.Domain[int]{4, 7, 8})
-	vars.SetDomain("I1", centipede.Domain[int]{4, 7, 8})
+	vars.SetDomain("G1", centipede.Domain[int]{4, 7})
+	vars.SetDomain("H1", centipede.Domain[int]{4, 7})
+	vars.SetDomain("I1", centipede.Domain[int]{8})
 
 	vars.SetDomain("A2", centipede.Domain[int]{7, 9})
 	vars.SetDomain("E2", centipede.Domain[int]{1, 5})
-	vars.SetDomain("I2", centipede.Domain[int]{2, 3, 4, 6})
+	vars.SetDomain("I2", centipede.Domain[int]{3, 4})
 
 	vars.SetDomain("A3", centipede.Domain[int]{7, 9})
 	vars.SetDomain("E3", centipede.Domain[int]{1, 5})
-	vars.SetDomain("I3", centipede.Domain[int]{2, 3, 4, 6})
+	vars.SetDomain("I3", centipede.Domain[int]{3, 4})
 
 	vars.SetDomain("A4", centipede.Domain[int]{1, 2, 3})
 	vars.SetDomain("E4", centipede.Domain[int]{2, 8})
-	vars.SetDomain("I4", centipede.Domain[int]{2, 5, 6, 7})
+	vars.SetDomain("I4", centipede.Domain[int]{2, 7})
 
 	vars.SetDomain("A5", centipede.Domain[int]{4})
 	vars.SetDomain("B5", centipede.Domain[int]{3, 5})
@@ -233,13 +234,21 @@ func main() {
 
 	vars.SetDomain("A6", centipede.Domain[int]{1, 2, 3})
 	vars.SetDomain("E6", centipede.Domain[int]{2, 8})
-	vars.SetDomain("I6", centipede.Domain[int]{2, 5, 6, 7})
+	vars.SetDomain("I6", centipede.Domain[int]{2, 7})
 
+	vars.SetDomain("A7", centipede.Domain[int]{2, 5, 6, 8})
 	vars.SetDomain("E7", centipede.Domain[int]{4, 9})
+	vars.SetDomain("I7", centipede.Domain[int]{5, 6, 9})
 
+	vars.SetDomain("A8", centipede.Domain[int]{2, 5, 6, 8})
 	vars.SetDomain("E8", centipede.Domain[int]{4, 9})
+	vars.SetDomain("I8", centipede.Domain[int]{5, 6, 9})
 
+	vars.SetDomain("A9", centipede.Domain[int]{2, 5, 6, 8})
 	vars.SetDomain("E9", centipede.Domain[int]{3, 6, 7})
+	vars.SetDomain("G9", centipede.Domain[int]{1, 2, 4, 5, 6})
+	vars.SetDomain("H9", centipede.Domain[int]{1, 2, 4, 5, 6})
+	vars.SetDomain("I9", centipede.Domain[int]{5, 6, 9})
 
 	solver := centipede.NewBackTrackingCSPSolver(vars, constraints)
 	solver.State.MakeArcConsistent(ctx)
@@ -248,6 +257,7 @@ func main() {
 	go func() {
 		for range time.Tick(10 * time.Second) {
 			fmt.Println("Running for", time.Since(t))
+			fmt.Println(solver.State.Failures, "failures")
 			dump(solver.State)
 			fmt.Println()
 		}
