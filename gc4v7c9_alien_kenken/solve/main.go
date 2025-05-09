@@ -3,66 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"math"
 	"strconv"
 	"time"
 
+	"github.com/bitlux/caches/gc4v7c9_alien_kenken/common"
 	"github.com/bitlux/caches/util"
 	"github.com/gnboorse/centipede"
 )
-
-func round(n float64) int {
-	return int(math.Round(n - 0.5))
-}
-
-func clubs(vars *centipede.Variables[int], names centipede.VariableNames) int {
-	sum := 0
-	for _, name := range names {
-		n := vars.Find(name).Value
-		sum += n * n
-	}
-
-	return sum
-}
-
-func hearts(vars *centipede.Variables[int], names centipede.VariableNames) int {
-	sum := 0
-	for _, name := range names {
-		n := vars.Find(name).Value
-		sum += n * n * n
-	}
-
-	return round(math.Sqrt(float64(sum)))
-}
-
-func spades(vars *centipede.Variables[int], names centipede.VariableNames) int {
-	sum := 0
-	prod := 1
-	for _, name := range names {
-		n := vars.Find(name).Value
-		sum += n
-		prod *= n
-	}
-	return sum + round(math.Sqrt(float64(prod)))
-}
-
-func diamonds(vars *centipede.Variables[int], names centipede.VariableNames) int {
-	sum := 0
-	prod := 1
-	denom := 0.0
-	for _, name := range names {
-		n := vars.Find(name).Value
-		sum += n
-		prod *= n
-		denom += 1.0 / float64(n)
-	}
-
-	n := float64(len(names))
-	nthRoot := math.Pow(float64(prod), 1.0/n)
-	return round(n * (nthRoot + float64(sum)/n + n/denom))
-}
-
-const SIZE = 9
 
 func containsAll(vars *centipede.Variables[int], names centipede.VariableNames) bool {
 	for _, name := range names {
@@ -74,19 +21,20 @@ func containsAll(vars *centipede.Variables[int], names centipede.VariableNames) 
 }
 
 func dump(state centipede.CSPState[int]) {
-	for i := range SIZE {
+	for i := range common.SIZE {
 		row := i + 1
-		for j := range SIZE {
+		for j := range common.SIZE {
 			col := j + 1
-			variable := state.Vars.Find(pair(col, row))
+			variable := state.Vars.Find(pair(row, col))
 			fmt.Printf("%d ", variable.Value)
 		}
 		fmt.Println()
 	}
 }
 
+// Converts Cartesian to Sheets. (2, 5) => "B5"
 func pair(i, j int) centipede.VariableName {
-	return centipede.VariableName(string(util.A1Z26(i)) + strconv.Itoa(j))
+	return centipede.VariableName(string(util.A1Z26(j)) + strconv.Itoa(i))
 }
 
 func main() {
@@ -96,45 +44,31 @@ func main() {
 	var constraints []centipede.Constraint[int]
 
 	// Create variables, enforce uniqueness in a row.
-	for i := range SIZE {
+	for i := range common.SIZE {
 		var inRow []centipede.VariableName
-		for j := range SIZE {
-			name := pair(j+1, i+1)
-			vars = append(vars, centipede.NewVariable(name, centipede.IntRange(1, SIZE+1)))
+		for j := range common.SIZE {
+			name := pair(i+1, j+1)
+			vars = append(vars, centipede.NewVariable(name, centipede.IntRange(1, common.SIZE+1)))
 			inRow = append(inRow, name)
 		}
-		//		constraints = append(constraints, centipede.AllUnique[int](inRow...)...)
+		if i == 0 || i == 4 || i == 8 { // TODO: remove
+			constraints = append(constraints, centipede.AllUnique[int](inRow...)...)
+		}
 	}
 
 	// Enforce uniqueness in a column.
-	for j := range SIZE {
+	for j := range common.SIZE {
 		var inCol []centipede.VariableName
-		for i := range SIZE {
-			inCol = append(inCol, pair(j+1, i+1))
+		for i := range common.SIZE {
+			inCol = append(inCol, pair(i+1, j+1))
 		}
-		//		constraints = append(constraints, centipede.AllUnique[int](inCol...)...)
-	}
-
-	// TODO: remove
-	for _, row := range []int{ /*1, 5, */ 9} {
-		var inRow []centipede.VariableName
-		for col := range SIZE {
-			inRow = append(inRow, pair(row, col+1))
+		if j == 0 || j == 4 || j == 8 { // TODO: remove
+			constraints = append(constraints, centipede.AllUnique[int](inCol...)...)
 		}
-		constraints = append(constraints, centipede.AllUnique[int](inRow...)...)
 	}
-
-	for row := range SIZE {
-		var inCol []centipede.VariableName
-		for _, col := range []int{1 /*5,*/, 9} {
-			inCol = append(inCol, pair(row+1, col))
-		}
-		constraints = append(constraints, centipede.AllUnique[int](inCol...)...)
-	}
-	// end TODO:
 
 	for _, c := range []struct {
-		f      func(*centipede.Variables[int], centipede.VariableNames) int
+		f      func([]int) int
 		target int
 		names  centipede.VariableNames
 	}{
@@ -164,12 +98,12 @@ func main() {
 		//	{diamonds, 79, centipede.VariableNames{"F6", "G6", "F7", "G7"}},
 		//	{clubs, 91, centipede.VariableNames{"H6", "H7", "F8", "G8", "H8"}},
 
-		{diamonds, 84, centipede.VariableNames{"A7", "A8", "A9", "B9", "C9"}},
+		{common.Diamonds, 84, centipede.VariableNames{"A7", "A8", "A9", "B9", "C9"}},
 		// redundant with domain
 		// {hearts, 28, centipede.VariableNames{"E7", "E8"}},
-		{hearts, 35, centipede.VariableNames{"I7", "I8", "G9", "H9", "I9"}},
+		{common.Hearts, 35, centipede.VariableNames{"I7", "I8", "G9", "H9", "I9"}},
 
-		{spades, 24, centipede.VariableNames{"D9", "E9", "F9"}},
+		{common.Spades, 24, centipede.VariableNames{"D9", "E9", "F9"}},
 	} {
 		constraints = append(constraints, centipede.Constraint[int]{
 			Vars: c.names,
@@ -177,7 +111,11 @@ func main() {
 				if !containsAll(vars, c.names) {
 					return true
 				}
-				return c.f(vars, c.names) == c.target
+				var ints []int
+				for _, name := range c.names {
+					ints = append(ints, vars.Find(name).Value)
+				}
+				return c.f(ints) == c.target
 			},
 		})
 	}
@@ -201,47 +139,47 @@ func main() {
 	})
 
 	vars.SetDomain("A1", centipede.Domain[int]{1, 5})
-	vars.SetDomain("B1", centipede.Domain[int]{1, 5, 9})
-	vars.SetDomain("C1", centipede.Domain[int]{1, 5, 9})
-	vars.SetDomain("D1", centipede.Domain[int]{2, 3, 6})
+	vars.SetDomain("B1", centipede.Domain[int]{9})    // 1 5 9
+	vars.SetDomain("C1", centipede.Domain[int]{1, 5}) // 1 5 9
+	vars.SetDomain("D1", centipede.Domain[int]{2})    // 2 3 6
 	vars.SetDomain("E1", centipede.Domain[int]{3, 6})
-	vars.SetDomain("F1", centipede.Domain[int]{2, 3, 6})
-	vars.SetDomain("G1", centipede.Domain[int]{4, 7})
-	vars.SetDomain("H1", centipede.Domain[int]{4, 7})
+	vars.SetDomain("F1", centipede.Domain[int]{3, 6}) // 2 3 6
+	vars.SetDomain("G1", centipede.Domain[int]{4})    // 4 7
+	vars.SetDomain("H1", centipede.Domain[int]{7})    // 4 7
 	vars.SetDomain("I1", centipede.Domain[int]{8})
 
-	vars.SetDomain("A2", centipede.Domain[int]{7, 9})
-	vars.SetDomain("E2", centipede.Domain[int]{1, 5})
-	vars.SetDomain("I2", centipede.Domain[int]{3, 4})
+	vars.SetDomain("A2", centipede.Domain[int]{7}) // 7 9
+	vars.SetDomain("E2", centipede.Domain[int]{1}) // 1 5
+	vars.SetDomain("I2", centipede.Domain[int]{3}) // 3 4
 
-	vars.SetDomain("A3", centipede.Domain[int]{7, 9})
-	vars.SetDomain("E3", centipede.Domain[int]{1, 5})
-	vars.SetDomain("I3", centipede.Domain[int]{3, 4})
+	vars.SetDomain("A3", centipede.Domain[int]{9}) // 7 9
+	vars.SetDomain("E3", centipede.Domain[int]{5}) // 1 5
+	vars.SetDomain("I3", centipede.Domain[int]{4}) // 3 4
 
-	vars.SetDomain("A4", centipede.Domain[int]{1, 2, 3})
-	vars.SetDomain("E4", centipede.Domain[int]{2, 8})
-	vars.SetDomain("I4", centipede.Domain[int]{2, 7})
+	vars.SetDomain("A4", centipede.Domain[int]{3}) // 1 2 3
+	vars.SetDomain("E4", centipede.Domain[int]{2}) // 2 8
+	vars.SetDomain("I4", centipede.Domain[int]{2}) // 2 7
 
 	vars.SetDomain("A5", centipede.Domain[int]{4})
-	vars.SetDomain("B5", centipede.Domain[int]{3, 5})
-	vars.SetDomain("C5", centipede.Domain[int]{3, 5})
-	vars.SetDomain("D5", centipede.Domain[int]{6, 7, 8})
+	vars.SetDomain("B5", centipede.Domain[int]{3})    // 3 5
+	vars.SetDomain("C5", centipede.Domain[int]{5})    // 3 5
+	vars.SetDomain("D5", centipede.Domain[int]{6, 7}) // 6 7 8
 	vars.SetDomain("E5", centipede.Domain[int]{6, 7})
-	vars.SetDomain("F5", centipede.Domain[int]{6, 7, 8})
-	vars.SetDomain("G5", centipede.Domain[int]{2, 9})
-	vars.SetDomain("H5", centipede.Domain[int]{2, 9})
+	vars.SetDomain("F5", centipede.Domain[int]{8}) // 6 7 8
+	vars.SetDomain("G5", centipede.Domain[int]{2}) // 2 9
+	vars.SetDomain("H5", centipede.Domain[int]{9}) // 2 9
 	vars.SetDomain("I5", centipede.Domain[int]{1})
 
-	vars.SetDomain("A6", centipede.Domain[int]{1, 2, 3})
-	vars.SetDomain("E6", centipede.Domain[int]{2, 8})
-	vars.SetDomain("I6", centipede.Domain[int]{2, 7})
+	vars.SetDomain("A6", centipede.Domain[int]{1, 2}) // 1 2 3
+	vars.SetDomain("E6", centipede.Domain[int]{8})    // 2 8
+	vars.SetDomain("I6", centipede.Domain[int]{7})    // 2 7
 
 	vars.SetDomain("A7", centipede.Domain[int]{2, 5, 6, 8})
-	vars.SetDomain("E7", centipede.Domain[int]{4, 9})
+	vars.SetDomain("E7", centipede.Domain[int]{4}) // 4 9
 	vars.SetDomain("I7", centipede.Domain[int]{5, 6, 9})
 
 	vars.SetDomain("A8", centipede.Domain[int]{2, 5, 6, 8})
-	vars.SetDomain("E8", centipede.Domain[int]{4, 9})
+	vars.SetDomain("E8", centipede.Domain[int]{9}) // 4 9
 	vars.SetDomain("I8", centipede.Domain[int]{5, 6, 9})
 
 	vars.SetDomain("A9", centipede.Domain[int]{2, 5, 6, 8})
@@ -269,7 +207,9 @@ func main() {
 
 	dump(solver.State)
 
-	x := clubs(&solver.State.Vars, centipede.VariableNames{"B6", "C9", "I3", "E3"})
-	y := clubs(&solver.State.Vars, centipede.VariableNames{"F9", "D4", "G6", "B2", "G4", "F1"})
-	fmt.Printf("N 37 23.%03d W 122 08.%03d", x, y)
+	/*
+		x := clubs(&solver.State.Vars, centipede.VariableNames{"B6", "C9", "I3", "E3"})
+		y := clubs(&solver.State.Vars, centipede.VariableNames{"F9", "D4", "G6", "B2", "G4", "F1"})
+		fmt.Printf("N 37 23.%03d W 122 08.%03d", x, y)
+	*/
 }
