@@ -195,7 +195,6 @@ func main() {
 	go func() {
 		for range time.Tick(10 * time.Second) {
 			fmt.Println("Running for", time.Since(t))
-			fmt.Println(solver.State.Failures, "failures")
 			dump(solver.State)
 			fmt.Println()
 		}
