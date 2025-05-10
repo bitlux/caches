@@ -34,7 +34,7 @@ func dump(state centipede.CSPState[int]) {
 
 // Converts Cartesian to Sheets. (2, 5) => "B5"
 func pair(i, j int) centipede.VariableName {
-	return centipede.VariableName(string(util.A1Z26(j)) + strconv.Itoa(i))
+	return centipede.VariableName(string(rune(util.A1Z26(j))) + strconv.Itoa(i))
 }
 
 func main() {
