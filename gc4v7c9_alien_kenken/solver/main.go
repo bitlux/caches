@@ -26,7 +26,7 @@ var cages = []Cage{
 	},
 
 	{
-		candidates: [][]int{{2, 7}},
+		candidates: [][]int{{7, 9}},
 		cells:      []string{"A2", "A3"},
 	},
 	// {
