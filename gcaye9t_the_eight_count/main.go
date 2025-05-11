@@ -47,5 +47,5 @@ func main() {
 7 4 4 4 4 4 4
 7 7 7 7 7 7 7`
 
-	util.PrintIncreasing(util.RuneCount(s))
+	util.PrintAscending(util.RuneCount(s))
 }
