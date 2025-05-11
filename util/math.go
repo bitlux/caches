@@ -2,8 +2,6 @@ package util
 
 import (
 	"errors"
-	"fmt"
-	"maps"
 	"slices"
 
 	"golang.org/x/exp/constraints"
@@ -45,6 +43,22 @@ func Digits(n int) []int {
 	return d
 }
 
+// FromDigitsBase takes a slice of digits in the provided base and returns them as a single number.
+// It is the inverse of Digits.
+func FromDigitsBase(digits []int, base int) int {
+	ret := 0
+	for _, d := range digits {
+		ret = ret*base + d
+	}
+	return ret
+}
+
+// FromDigits takes a slice of digits and returns them as a single number. It is the inverse of
+// Digits.
+func FromDigits(digits []int) int {
+	return FromDigitsBase(digits, 10)
+}
+
 // RuneCount returns a map containing each rune in s and how many times it occurs.
 func RuneCount(s string) map[rune]int {
 	ret := map[rune]int{}
@@ -52,15 +66,6 @@ func RuneCount(s string) map[rune]int {
 		ret[r]++
 	}
 	return ret
-}
-
-// PrintIncreasing prints the keys and values in the map in increasing order of the keys.
-func PrintIncreasing(m map[rune]int) {
-	// TODO: use generics. May not be possible to print a rune as a char with %v.
-	keys := slices.Sorted(maps.Keys(m))
-	for _, k := range keys {
-		fmt.Printf("%c: %d\n", k, m[k])
-	}
 }
 
 // A1Z26 enciphers and deciphers an integer (representing either an ordinal in the range [1, 26] or

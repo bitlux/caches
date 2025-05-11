@@ -84,3 +84,12 @@ func TestA1Z26(t *testing.T) {
 		}
 	}
 }
+
+func TestFromDigits(t *testing.T) {
+	for _, tc := range []int{1, 101, 1618033, 2468} {
+		num := FromDigits(Digits(tc))
+		if num != tc {
+			t.Errorf("FromDigits(Digits(%d)) = %d, want %d", tc, num, tc)
+		}
+	}
+}
