@@ -20,3 +20,17 @@ func ExampleDigits() {
 	fmt.Println(util.Digits(1234))
 	// Output: [1 2 3 4]
 }
+
+func ExamplePrintAscending() {
+	m1 := map[rune]int{
+		'A': 10,
+	}
+	util.PrintAscending(m1)
+	m2 := map[string]int{
+		"asdf": 10,
+	}
+	util.PrintAscending(m2)
+	// Output:
+	// 'A': 10
+	// asdf: 10
+}

@@ -1,17 +1,46 @@
 package util
 
 import (
+	"cmp"
 	"fmt"
 	"maps"
 	"slices"
+	"unicode"
 )
 
-// PrintAscending prints the keys and values in the map in increasing order of the keys.
-func PrintAscending(m map[rune]int) {
-	// TODO: use generics. May not be possible to print a rune as a char with %v.
+func printAscending[T cmp.Ordered, U any](format string, m map[T]U) {
 	keys := slices.Sorted(maps.Keys(m))
 	for _, k := range keys {
-		fmt.Printf("%c: %d\n", k, m[k])
+		fmt.Printf(format, k, m[k])
+	}
+}
+
+// PrintAscending prints the keys and values in the map in increasing order of the keys. If it
+// determines that each key in the map is a rune, it will print the rune using %c. Other values
+// are printed with %v.
+func PrintAscending[T cmp.Ordered, U any](m map[T]U) {
+	runes := map[rune]U{}
+	isUnicode := true
+
+loop:
+	for k, v := range m {
+		switch r := any(k).(type) {
+		case int32:
+			if !(unicode.IsGraphic(r) || unicode.IsSpace(r)) {
+				isUnicode = false
+				break loop
+			}
+			runes[r] = v
+		default:
+			isUnicode = false
+			break loop
+		}
+	}
+
+	if isUnicode {
+		printAscending("'%c': %v\n", runes)
+	} else {
+		printAscending("%v: %v\n", m)
 	}
 }
 
