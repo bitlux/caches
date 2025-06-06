@@ -23,7 +23,7 @@ func main() {
 		//	{c.Hearts, 4, 39}, // almost certainly contains 9
 		//	{c.Hearts, 4, 20},
 
-		//	{c.Hearts, 3, 9}, // {1, 3, 4} {2, 3, 4}
+		// {c.Hearts, 3, 9}, // {1, 3, 4} {2, 3, 4}
 		//	{c.Spades, 5, 104}, // {2, 6, 7, 8, 8}
 		// {c.Hearts, 3, 18}, // {1, 2, 7} {1, 5, 6}
 
