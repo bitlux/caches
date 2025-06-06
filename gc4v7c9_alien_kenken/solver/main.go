@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"maps"
 	"slices"
 	"strconv"
 	"time"
@@ -14,6 +15,7 @@ const SIZE = common.SIZE
 
 var (
 	validCount, invalidCount int
+	farthest                 map[int]string
 )
 
 type Cage struct {
@@ -57,16 +59,14 @@ var cages = []Cage{
 		cells:      []string{"I2", "I3"},
 	},
 
-	/*
-		{
-			candidates: common.Candidates(common.Hearts, 39, 4),
-			cells:      []string{"C3", "D3", "C4", "D4"},
-		},
-		{
-			candidates: common.Candidates(common.Hearts, 20, 4),
-			cells:      []string{"F3", "G3", "F4", "G4"},
-		},
-	*/
+	{
+		candidates: common.Candidates(common.Hearts, 39, 4),
+		cells:      []string{"C3", "D3", "C4", "D4"},
+	},
+	{
+		candidates: common.Candidates(common.Hearts, 20, 4),
+		cells:      []string{"F3", "G3", "F4", "G4"},
+	},
 
 	{
 		candidates: [][]int{{1, 3}, {2, 3}},
@@ -94,32 +94,44 @@ var cages = []Cage{
 		cells:      []string{"G5", "H5"}, // 15s
 	},
 
-	/*
-		{
-			candidates: common.Candidates(common.Spades, 130, 5),
-			cells:      []string{"B6", "B7", "B8", "C8", "D8"},
-		},
-		{
-			candidates: common.Candidates(common.Spades, 21, 4),
-			cells:      []string{"C6", "D6", "C7", "D7"},
-		},
-		{
-			candidates: common.Candidates(common.Diamonds, 79, 4),
-			cells:      []string{"F6", "G6", "F7", "G7"},
-		},
-		{
-			candidates: common.Candidates(common.Clubs, 91, 5),
-			cells:      []string{"H6", "H7", "F8", "G8", "H8"},
-		},
-	*/
+	{
+		candidates: common.Candidates(common.Spades, 130, 5),
+		cells:      []string{"B6", "B7", "B8", "C8", "D8"},
+	},
+	{
+		candidates: common.Candidates(common.Spades, 21, 4),
+		cells:      []string{"C6", "D6", "C7", "D7"},
+	},
+	{
+		candidates: common.Candidates(common.Diamonds, 79, 4),
+		cells:      []string{"F6", "G6", "F7", "G7"},
+	},
+	{
+		candidates: common.Candidates(common.Clubs, 91, 5),
+		cells:      []string{"H6", "H7", "F8", "G8", "H8"},
+	},
 
-	//
+	{
+		candidates: common.Candidates(common.Diamonds, 84, 5),
+		cells:      []string{"A7", "A8", "A9", "B9", "C9"},
+	},
 	{
 		candidates: [][]int{{4, 9}},
 		cells:      []string{"E7", "E8"}, // 28h
 	},
-	//
+	{
+		candidates: common.Candidates(common.Hearts, 35, 5),
+		cells:      []string{"I7", "I8", "G9", "H9", "I9"},
+	},
 
+	// {
+	// 	candidates: [][]int{{1, 9}, {4, 8}},
+	// 	cells:      []string{"D9", "F9"}, // 24s
+	// },
+	// {
+	// 	candidates: [][]int{{3}, {7}},
+	// 	cells:      []string{"E9"}, // 24s
+	// },
 }
 
 func sheetsToIndices(s string) (int, int) {
@@ -133,14 +145,15 @@ type Board struct {
 	values [SIZE][SIZE]int
 }
 
-func (b *Board) dump() {
+func (b *Board) String() string {
+	s := ""
 	for i := range SIZE {
 		for j := range SIZE {
-			fmt.Printf("%d ", b.values[i][j])
+			s += fmt.Sprintf("%d ", b.values[i][j])
 		}
-		fmt.Println()
+		s += "\n"
 	}
-	fmt.Println()
+	return s
 }
 
 func (b *Board) clone() *Board {
@@ -196,11 +209,14 @@ func (b *Board) isValid() bool {
 }
 
 func (b *Board) recurse(index int) {
+	if farthest[index] == "" {
+		farthest[index] = b.String()
+	}
 	if index == len(cages) {
-		validCount++
-		if validCount%10_000 == 0 {
-			b.dump()
+		if validCount%1_000_000 == 0 {
+			fmt.Println(b)
 		}
+		validCount++
 		return
 	}
 	cage := cages[index]
@@ -245,6 +261,8 @@ func dump() {
 }
 
 func main() {
+	farthest = map[int]string{}
+
 	b := &Board{}
 	b.values[4][0] = 4
 	b.values[4][8] = 1
@@ -257,4 +275,8 @@ func main() {
 
 	b.recurse(0)
 	dump()
+
+	for _, d := range slices.Sorted(maps.Keys(farthest)) {
+		fmt.Printf("%d\n%s\n\n", farthest[d])
+	}
 }
