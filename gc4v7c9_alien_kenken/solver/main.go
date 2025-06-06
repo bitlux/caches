@@ -59,6 +59,17 @@ var cages = []Cage{
 		cells:      []string{"I2", "I3"},
 	},
 
+	/*
+		{
+			candidates: common.Candidates(common.Hearts, 39, 4),
+			cells:      []string{"C3", "D3", "C4", "D4"},
+		},
+		{
+			candidates: common.Candidates(common.Hearts, 20, 4),
+			cells:      []string{"F3", "G3", "F4", "G4"},
+		},
+	*/
+
 	{
 		candidates: common.Candidates(common.Hearts, 39, 4),
 		cells:      []string{"C3", "D3", "C4", "D4"},
@@ -115,10 +126,12 @@ var cages = []Cage{
 		candidates: common.Candidates(common.Diamonds, 84, 5),
 		cells:      []string{"A7", "A8", "A9", "B9", "C9"},
 	},
+
 	{
 		candidates: [][]int{{4, 9}},
 		cells:      []string{"E7", "E8"}, // 28h
 	},
+
 	{
 		candidates: common.Candidates(common.Hearts, 35, 5),
 		cells:      []string{"I7", "I8", "G9", "H9", "I9"},
@@ -277,6 +290,6 @@ func main() {
 	dump()
 
 	for _, d := range slices.Sorted(maps.Keys(farthest)) {
-		fmt.Printf("%d\n%s\n\n", farthest[d])
+		fmt.Printf("%d\n%s\n\n", d, farthest[d])
 	}
 }
