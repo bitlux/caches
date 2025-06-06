@@ -2,53 +2,9 @@ package main
 
 import (
 	"fmt"
-	"maps"
-	"math"
-	"slices"
-	"strconv"
 
 	c "github.com/bitlux/caches/gc4v7c9_alien_kenken/common"
 )
-
-func unique(nums [][]int) [][]int {
-	m := map[string]bool{}
-	for _, slice := range nums {
-		var s string
-		for _, n := range slice {
-			s += strconv.Itoa(n)
-		}
-		m[s] = true
-	}
-
-	var ret [][]int
-	for _, k := range slices.Sorted(maps.Keys(m)) {
-		n, _ := strconv.Atoi(k)
-		ret = append(ret, digits(n))
-	}
-	return ret
-}
-
-func digits(n int) []int {
-	var d []int
-	for n > 0 {
-		d = append(d, n%10)
-		n /= 10
-	}
-	slices.Sort(d)
-	return d
-}
-
-func gen(size int) [][]int {
-	var ret [][]int
-	for n := int(math.Pow10(size - 1)); n < int(math.Pow10(size)); n++ {
-		digits := digits(n)
-		if slices.Contains(digits, 0) {
-			continue
-		}
-		ret = append(ret, digits)
-	}
-	return unique(ret)
-}
 
 func main() {
 	for _, tc := range []struct {
@@ -72,11 +28,11 @@ func main() {
 		// {c.Hearts, 3, 18}, // {1, 2, 7} {1, 5, 6}
 
 		//	{c.Clubs, 2, 34}, // {3, 5}
-		//	{c.Spades, 2, 15}, // {9, 2}
+		{c.Spades, 2, 15}, // {9, 2}
 
 		//	{c.Clubs, 5, 130},
-		{c.Spades, 4, 21},
-		{c.Diamonds, 4, 79},
+		// {c.Spades, 4, 21},
+		// {c.Diamonds, 4, 79},
 		//	{c.Clubs, 5, 91},
 
 		//	{c.Diamonds, 5, 84}, // {2, 6, 7v, 8, 9v} {3v, 5, 6, 8, 8v} {4v, 5, 6, 6v, 8}
@@ -97,12 +53,8 @@ func main() {
 		// {c.Spades, 3, 24}, // {1, 7, 9} {2, 6, 7} {3, 4, 8}
 	} {
 		fmt.Println(tc.target)
-		for _, cand := range gen(tc.size) {
-			result := tc.op(cand)
-			if result == tc.target {
-				fmt.Println("", cand)
-			}
+		for _, cand := range c.Candidates(tc.op, tc.target, tc.size) {
+			fmt.Println("  ", cand)
 		}
-		fmt.Println()
 	}
 }

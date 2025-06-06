@@ -4,12 +4,23 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"time"
 
 	"github.com/bitlux/caches/gc4v7c9_alien_kenken/common"
 	"github.com/bitlux/caches/util"
 )
 
 const SIZE = common.SIZE
+
+var (
+	validCount, invalidCount int
+)
+
+type Cage struct {
+	// len(cells) == len(i) for _, i := range candidates
+	candidates [][]int
+	cells      []string
+}
 
 var cages = []Cage{
 	{
@@ -29,35 +40,92 @@ var cages = []Cage{
 		candidates: [][]int{{7, 9}},
 		cells:      []string{"A2", "A3"},
 	},
-	// {
-	// 	candidates: [][]int{{1, 5}},
-	// 	cells:      []string{"E2", "E3"},
-	// },
+	{
+		candidates: common.Candidates(common.Hearts, 36, 5),
+		cells:      []string{"B2", "C2", "D2", "B3", "B4"},
+	},
+	{
+		candidates: [][]int{{1, 5}},
+		cells:      []string{"E2", "E3"},
+	},
+	{
+		candidates: common.Candidates(common.Hearts, 34, 5),
+		cells:      []string{"F2", "G2", "H2", "H3", "H4"},
+	},
 	{
 		candidates: [][]int{{3, 4}},
 		cells:      []string{"I2", "I3"},
 	},
 
+	/*
+		{
+			candidates: common.Candidates(common.Hearts, 39, 4),
+			cells:      []string{"C3", "D3", "C4", "D4"},
+		},
+		{
+			candidates: common.Candidates(common.Hearts, 20, 4),
+			cells:      []string{"F3", "G3", "F4", "G4"},
+		},
+	*/
+
 	{
 		candidates: [][]int{{1, 3}, {2, 3}},
-		cells:      []string{"A4", "A6"},
+		cells:      []string{"A4", "A6"}, // 9h
+	},
+	{
+		candidates: [][]int{{2, 8}},
+		cells:      []string{"E4", "E6"}, // 104s
 	},
 	{
 		candidates: [][]int{{2, 7}, {5, 6}},
-		cells:      []string{"I4", "I6"},
+		cells:      []string{"I4", "I6"}, // 18h
 	},
+
+	{
+		candidates: [][]int{{3, 5}},
+		cells:      []string{"B5", "C5"}, // 34c
+	},
+	{
+		candidates: [][]int{{6, 7, 8}},
+		cells:      []string{"D5", "E5", "F5"}, // 104s
+	},
+	{
+		candidates: [][]int{{2, 9}},
+		cells:      []string{"G5", "H5"}, // 15s
+	},
+
+	/*
+		{
+			candidates: common.Candidates(common.Spades, 130, 5),
+			cells:      []string{"B6", "B7", "B8", "C8", "D8"},
+		},
+		{
+			candidates: common.Candidates(common.Spades, 21, 4),
+			cells:      []string{"C6", "D6", "C7", "D7"},
+		},
+		{
+			candidates: common.Candidates(common.Diamonds, 79, 4),
+			cells:      []string{"F6", "G6", "F7", "G7"},
+		},
+		{
+			candidates: common.Candidates(common.Clubs, 91, 5),
+			cells:      []string{"H6", "H7", "F8", "G8", "H8"},
+		},
+	*/
+
+	//
+	{
+		candidates: [][]int{{4, 9}},
+		cells:      []string{"E7", "E8"}, // 28h
+	},
+	//
+
 }
 
 func sheetsToIndices(s string) (int, int) {
 	i, err := strconv.Atoi(s[1:])
 	util.Must(err)
 	return i - 1, util.A1Z26(int(s[0]) - 1)
-}
-
-type Cage struct {
-	// len(cells) == len(i) for _, i := range list
-	candidates [][]int
-	cells      []string
 }
 
 type Board struct {
@@ -98,6 +166,7 @@ func (b *Board) isValid() bool {
 					continue
 				}
 				if a == b {
+					invalidCount++
 					return false
 				}
 			}
@@ -116,6 +185,7 @@ func (b *Board) isValid() bool {
 					continue
 				}
 				if a == b {
+					invalidCount++
 					return false
 				}
 			}
@@ -127,7 +197,10 @@ func (b *Board) isValid() bool {
 
 func (b *Board) recurse(index int) {
 	if index == len(cages) {
-		b.dump()
+		validCount++
+		if validCount%10_000 == 0 {
+			b.dump()
+		}
 		return
 	}
 	cage := cages[index]
@@ -136,9 +209,9 @@ func (b *Board) recurse(index int) {
 		for _, p := range perms {
 			// Assign permutation of candidate to cells in cage.
 			clone := b.clone()
-			for index, cell := range cage.cells {
+			for pc, cell := range cage.cells {
 				i, j := sheetsToIndices(cell)
-				clone.values[i][j] = p[index]
+				clone.values[i][j] = p[pc]
 			}
 			if clone.isValid() {
 				clone.recurse(index + 1)
@@ -167,10 +240,21 @@ func permutations(s []int) [][]int {
 	return ret
 }
 
+func dump() {
+	fmt.Println("valid:", validCount, "invalid:", invalidCount)
+}
+
 func main() {
 	b := &Board{}
-	b.values[0][4] = 4
-	b.values[8][4] = 1
+	b.values[4][0] = 4
+	b.values[4][8] = 1
+
+	go func() {
+		for range time.Tick(5 * time.Second) {
+			dump()
+		}
+	}()
 
 	b.recurse(0)
+	dump()
 }
