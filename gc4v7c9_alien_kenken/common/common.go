@@ -54,8 +54,6 @@ func Diamonds(nums []int) int {
 	return round(n * (nthRoot + float64(sum)/n + n/denom))
 }
 
-const SIZE = 9
-
 func unique(nums [][]int) [][]int {
 	m := map[string]bool{}
 	for _, slice := range nums {
@@ -81,20 +79,21 @@ func digits(n int) []int {
 		d = append(d, n%10)
 		n /= 10
 	}
+	slices.Reverse(d)
 	return d
 }
 
-func recurse(length int, soFar [][]int) [][]int {
-	if length == 0 {
+func recurse(remaining int, soFar [][]int) [][]int {
+	if remaining == 0 {
 		return unique(soFar)
 	}
 	var ret [][]int
 	for n := 1; n < 10; n++ {
 		for _, curr := range soFar {
-			ret = append(ret, append(curr, n))
+			ret = append(ret, append(slices.Clone(curr), n))
 		}
 	}
-	return recurse(length-1, ret)
+	return recurse(remaining-1, ret)
 }
 
 func Candidates(f func([]int) int, target int, size int) [][]int {
