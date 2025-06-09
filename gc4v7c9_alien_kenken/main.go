@@ -5,7 +5,6 @@ import (
 	"math"
 
 	"github.com/bitlux/caches/gc4v7c9_alien_kenken/solver"
-	"github.com/bitlux/caches/util"
 )
 
 func round(n float64) int {
@@ -181,8 +180,6 @@ func main() {
 			Cells:      []string{"E9"}, // 24s
 		},
 	})
-
-	fmt.Println(len(util.Combinations(2)))
 
 	b := p.Solve()
 	fmt.Printf("N 37 23.%03d\n", Clubs([]int{b[5][1], b[8][2], b[2][8], b[2][4]}))
