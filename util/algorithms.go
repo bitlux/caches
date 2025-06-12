@@ -36,6 +36,7 @@ func Combinations(length int) [][]int {
 	return combos(length, [][]int{{}})
 }
 
+// TODO: This should not sort.
 func unique(nums [][]int) [][]int {
 	m := map[string]bool{}
 	for _, slice := range nums {
