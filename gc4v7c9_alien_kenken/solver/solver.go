@@ -151,7 +151,6 @@ func (p *Puzzle) Solve() Board {
 			p.dump()
 		}
 	}()
-	defer p.dump()
 
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -159,7 +158,11 @@ func (p *Puzzle) Solve() Board {
 	p.start = time.Now()
 	p.ch = make(chan Board)
 
-	go p.solve(ctx, 0, Board{})
+	go func() {
+		p.solve(ctx, 0, Board{})
+		fmt.Println("done:")
+		p.dump()
+	}()
 
 	return <-p.ch
 }
