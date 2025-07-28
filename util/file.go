@@ -1,5 +1,3 @@
-// Package util is a collection of utilities for manipulating files, retrieving web pages, basic
-// math, and other useful things.
 package util
 
 import (
@@ -13,8 +11,12 @@ func ReadLines(file string) []string {
 	f, err := os.Open(file)
 	Must(err)
 
-	var ret []string
 	scanner := bufio.NewScanner(f)
+	size := 100 * 1024
+	buf := make([]byte, size)
+	scanner.Buffer(buf, size)
+
+	var ret []string
 	for scanner.Scan() {
 		ret = append(ret, scanner.Text())
 	}
