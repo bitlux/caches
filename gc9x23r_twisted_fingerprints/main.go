@@ -21,7 +21,7 @@ func cbf(s string) string {
 
 func main() {
 	m := map[string]string{}
-	words := util.ReadLines("../wordlist-20210729.txt")
+	words := util.ReadLines("../data/wordlist-20210729.txt")
 	for _, w := range words {
 		m[cbf(w)] = w
 	}
