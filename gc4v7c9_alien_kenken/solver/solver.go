@@ -107,7 +107,7 @@ func (p *Puzzle) dump() {
 func sheetsToIndices(s string) (int, int) {
 	i, err := strconv.Atoi(s[1:])
 	util.Must(err)
-	return i - 1, util.A1Z26(int(s[0]) - 1)
+	return i - 1, util.A1Encode(s[0] - 1)
 }
 
 func (p *Puzzle) solve(ctx context.Context, index int, b Board) {
