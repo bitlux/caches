@@ -3,6 +3,7 @@ package util
 import (
 	"maps"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -68,19 +69,22 @@ func TestRuneCount(t *testing.T) {
 	}
 }
 
-func TestA1Z26(t *testing.T) {
+func TestA1EncodeDecode(t *testing.T) {
 	for _, tc := range []struct {
-		n, want int
+		r    rune
+		want int
 	}{
 		{'a', 1},
 		{'A', 1},
-		{1, 'A'},
 		{'z', 26},
 		{'Z', 26},
-		{26, 'Z'},
 	} {
-		if got := A1Z26(tc.n); got != tc.want {
-			t.Errorf("A1Z26(%d): got %d, want %d", tc.n, got, tc.want)
+		enc := A1Encode(tc.r)
+		if enc != tc.want {
+			t.Errorf("A1Encode(%c): got %d, want %d", tc.r, enc, tc.want)
+		}
+		if got := A1Decode(enc); got != []rune(strings.ToUpper(string(tc.r)))[0] {
+			t.Errorf("A1Decode(%d): got %c, want %c", enc, got, tc.r)
 		}
 	}
 }

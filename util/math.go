@@ -68,15 +68,15 @@ func RuneCount(s string) map[rune]int {
 	return ret
 }
 
-// A1Z26 enciphers and deciphers an integer (representing either an ordinal in the range [1, 26] or
-// an ASCII code point) using the A=1, ..., Z=26 substitution cipher.
-func A1Z26[T constraints.Integer](n T) T {
-	switch {
-	case n < 27:
-		return n + 'A' - 1
-	case n < 91:
-		return n - 'A' + 1
-	default:
-		return n - 'a' + 1
+// A1Encode encodes a rune in the range [A-Za-z] using the A=1, ..., Z=26 substitution cipher.
+func A1Encode[T constraints.Integer](n T) int {
+	if n < 91 {
+		return int(n - 'A' + 1)
 	}
+	return int(n - 'a' + 1)
+}
+
+// A1Decode decodes a number in the range [1-26] using the A=1, ..., Z=26 substitution cipher.
+func A1Decode(n int) rune {
+	return rune(n + 'A' - 1)
 }

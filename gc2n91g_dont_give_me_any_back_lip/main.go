@@ -30,7 +30,7 @@ func main() {
 		d := 0
 		for c := 'a'; c <= 'z'; c++ {
 			if m[c] == 0 {
-				d = int(util.A1Z26(c))
+				d = util.A1Encode(c)
 				break
 			}
 		}

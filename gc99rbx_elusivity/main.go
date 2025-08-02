@@ -34,7 +34,7 @@ func main() {
 		if c >= 'A' && c <= 'Z' {
 			n := ciphertext[i+1] - '0'
 			ind := index(alphabet, c, n) + 1
-			fmt.Printf("%c", util.A1Z26(ind))
+			fmt.Printf("%c", util.A1Decode(ind))
 			i += 2
 		} else {
 			fmt.Printf(" ")
