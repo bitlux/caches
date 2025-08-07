@@ -1,20 +1,15 @@
 package util
 
 import (
-	"slices"
+	"maps"
 	"testing"
 )
 
-func TestCBF(t *testing.T) {
-	for _, tc := range []struct {
-		s    string
-		want []int
-	}{
-		{"abc", []int{1, 2, 3}},
-		{"xyz", []int{4, 5, 6}},
-	} {
-		if got := CBF(tc.s); !slices.Equal(got, tc.want) {
-			t.Errorf("CBF(%s) = %v, want %v", tc.s, got, tc.want)
-		}
+func TestRuneCount(t *testing.T) {
+	s := "bitloox"
+	m := RuneCount(s)
+	want := map[rune]int{'b': 1, 'i': 1, 't': 1, 'l': 1, 'o': 2, 'x': 1}
+	if !maps.Equal(m, want) {
+		t.Errorf("RunCount(%q): got %v, want %v", s, m, want)
 	}
 }

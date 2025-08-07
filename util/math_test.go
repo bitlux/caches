@@ -1,9 +1,7 @@
 package util
 
 import (
-	"maps"
 	"slices"
-	"strings"
 	"testing"
 )
 
@@ -56,35 +54,6 @@ func TestDigits(t *testing.T) {
 		got := Digits(test.n)
 		if !slices.Equal(got, test.digits) {
 			t.Errorf("Digits(%d): got: %v, want: %v", test.n, got, test.digits)
-		}
-	}
-}
-
-func TestRuneCount(t *testing.T) {
-	s := "bitloox"
-	m := RuneCount(s)
-	want := map[rune]int{'b': 1, 'i': 1, 't': 1, 'l': 1, 'o': 2, 'x': 1}
-	if !maps.Equal(m, want) {
-		t.Errorf("RunCount(%q): got %v, want %v", s, m, want)
-	}
-}
-
-func TestA1EncodeDecode(t *testing.T) {
-	for _, tc := range []struct {
-		r    rune
-		want int
-	}{
-		{'a', 1},
-		{'A', 1},
-		{'z', 26},
-		{'Z', 26},
-	} {
-		enc := A1Encode(tc.r)
-		if enc != tc.want {
-			t.Errorf("A1Encode(%c): got %d, want %d", tc.r, enc, tc.want)
-		}
-		if got := A1Decode(enc); got != []rune(strings.ToUpper(string(tc.r)))[0] {
-			t.Errorf("A1Decode(%d): got %c, want %c", enc, got, tc.r)
 		}
 	}
 }

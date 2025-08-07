@@ -3,8 +3,6 @@ package util
 import (
 	"errors"
 	"slices"
-
-	"golang.org/x/exp/constraints"
 )
 
 // Factor returns the prime factors of n. n must be greater than 1.
@@ -57,26 +55,4 @@ func FromDigitsBase(digits []int, base int) int {
 // Digits.
 func FromDigits(digits []int) int {
 	return FromDigitsBase(digits, 10)
-}
-
-// RuneCount returns a map containing each rune in s and how many times it occurs.
-func RuneCount(s string) map[rune]int {
-	ret := map[rune]int{}
-	for _, r := range s {
-		ret[r]++
-	}
-	return ret
-}
-
-// A1Encode encodes a rune in the range [A-Za-z] using the A=1, ..., Z=26 substitution cipher.
-func A1Encode[T constraints.Integer](n T) int {
-	if n < 91 {
-		return int(n - 'A' + 1)
-	}
-	return int(n - 'a' + 1)
-}
-
-// A1Decode decodes a number in the range [1-26] using the A=1, ..., Z=26 substitution cipher.
-func A1Decode(n int) rune {
-	return rune(n + 'A' - 1)
 }
