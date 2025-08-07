@@ -9,12 +9,11 @@ func Histogram(s string) map[rune]int {
 	return histo
 }
 
-// CBF encodes a string into a slice of integers. CBF encoding is similar to A1Encode, but done
-// mod 10.
-func CBF(s string) []int {
-	var ret []int
-	for _, c := range s {
-		ret = append(ret, A1Encode(c)%10)
+// RuneCount returns a map containing each rune in s and how many times it occurs.
+func RuneCount(s string) map[rune]int {
+	ret := map[rune]int{}
+	for _, r := range s {
+		ret[r]++
 	}
 	return ret
 }
