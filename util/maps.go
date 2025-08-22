@@ -56,6 +56,7 @@ func IsUnique[T comparable](vals ...T) bool {
 	return true
 }
 
+// AsSet returns a set representation of vals, as a map with bool values.
 func AsSet[T comparable](vals []T) map[T]bool {
 	m := map[T]bool{}
 	for _, v := range vals {
