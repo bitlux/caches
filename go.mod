@@ -1,6 +1,6 @@
 module github.com/bitlux/caches
 
-go 1.23.4
+go 1.24
 
 require (
 	github.com/bitlux/vpnapi v0.0.0-20250308212757-c8443b09b42b
