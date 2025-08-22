@@ -55,3 +55,11 @@ func IsUnique[T comparable](vals ...T) bool {
 	}
 	return true
 }
+
+func AsSet[T comparable](vals []T) map[T]bool {
+	m := map[T]bool{}
+	for _, v := range vals {
+		m[v] = true
+	}
+	return m
+}
