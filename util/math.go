@@ -3,6 +3,8 @@ package util
 import (
 	"errors"
 	"slices"
+
+	"golang.org/x/exp/constraints"
 )
 
 // Factor returns the prime factors of n. n must be greater than 1.
@@ -31,10 +33,10 @@ func IsPrime(n int) bool {
 }
 
 // Digits returns a slice of the digits of n. Digits(1234) returns [1 2 3 4].
-func Digits(n int) []int {
+func Digits[T constraints.Integer](n T) []int {
 	var d []int
 	for n > 0 {
-		d = append(d, n%10)
+		d = append(d, int(n%10))
 		n /= 10
 	}
 	slices.Reverse(d)
