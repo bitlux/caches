@@ -45,16 +45,16 @@ func Digits[T constraints.Integer](n T) []int {
 
 // FromDigitsBase takes a slice of digits in the provided base and returns them as a single number.
 // It is the inverse of Digits.
-func FromDigitsBase(digits []int, base int) int {
+func FromDigitsBase[T constraints.Integer](digits []T, base int) int {
 	ret := 0
 	for _, d := range digits {
-		ret = ret*base + d
+		ret = ret*base + int(d)
 	}
 	return ret
 }
 
 // FromDigits takes a slice of digits and returns them as a single number. It is the inverse of
 // Digits.
-func FromDigits(digits []int) int {
+func FromDigits[T constraints.Integer](digits []T) int {
 	return FromDigitsBase(digits, 10)
 }
