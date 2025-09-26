@@ -97,7 +97,7 @@ func NewFromSeq(seq iter.Seq[string]) *Queue {
 }
 
 func (wq *Queue) MarkFinished(value string) {
-	wq.bar.Add(1)
+	util.Must(wq.bar.Add(1))
 
 	wq.mu.Lock()
 	defer wq.mu.Unlock()
