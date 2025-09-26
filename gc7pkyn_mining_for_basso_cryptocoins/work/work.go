@@ -83,7 +83,7 @@ func NewFromCheckpoint(fname string) *Queue {
 	comp := 0
 	wq.state, comp = stateFromString(string(contents))
 	wq.bar = bar(len(wq.state))
-	wq.bar.Add(comp)
+	util.Must(wq.bar.Add(comp))
 	return wq
 }
 
