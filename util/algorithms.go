@@ -6,12 +6,19 @@ import (
 	"strconv"
 )
 
+func factorial(n int) int {
+	if n <= 2 {
+		return n
+	}
+	return n*factorial(n-1)
+}
+
 // Permutations returns all permutations of the elements of s. If the elements
-// are not unique, then the return value with contain duplicates.
-func Permutations(s []int) [][]int {
-	var ret [][]int
-	var inner func(curr []int, index int)
-	inner = func(curr []int, index int) {
+// are not unique, then the return value will contain duplicates.
+func Permutations[T any](s []T) [][]T {
+	ret := make([][]T, 0, factorial(len(s)))
+	var inner func(curr []T, index int)
+	inner = func(curr []T, index int) {
 		if index == len(s) {
 			ret = append(ret, slices.Clone(curr))
 			return
