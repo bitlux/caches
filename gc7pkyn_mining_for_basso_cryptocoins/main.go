@@ -1,8 +1,11 @@
-//	 len | runtime | longest 0 prefix
-//	 --- | ------- | ----------------
-//		 4 |     10s |                6
-//		 5 |     20m |                8
-//     6 |  29h35m |                9
+// Runtimes:
+//
+//	    | slowboi | ziltoid | longest
+//	len | runtime | runtime | prefix
+//	--- | ------- | --------| -------
+//	  4 |     10s |      2s |       6
+//	  5 |     20m |      4m |       8
+//	  6 |  29h35m |         |       9
 package main
 
 import (
@@ -10,35 +13,32 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	"os"
-	"time"
 
-	"github.com/bitlux/caches/gc7pkyn_mining_for_basso_cryptocoins/work"
 	"github.com/bitlux/caches/util"
 )
 
 const (
 	prefix    = "bitlux_"
-	tokenBase = "tokens"
 )
 
 var (
 	target     = flag.Int("target", 6, "number of leading 0's to look for")
 	length     = flag.Int("length", 4, "number of characters to append")
-	workers    = flag.Int("workers", 10, "number of workers")
 	checkpoint = flag.String("checkpoint", "", "checkpoint file to load from")
-
-	ch chan token
 )
 
 type token struct {
 	value string
-	hash  string
+	hash  string // Hex-encoded
 	count int
 }
 
-func zeroCount(b []byte) token {
-	tok := token{value: prefix + string(b)}
+func (t *token) String() string {
+	return fmt.Sprintf("%d %s %s", t.count, t.value, t.hash)
+}
+
+func zeroCount(s string) token {
+	tok := token{value: prefix + s}
 	hash := md5.Sum([]byte(tok.value))
 	tok.hash = hex.EncodeToString(hash[:])
 
@@ -48,77 +48,40 @@ func zeroCount(b []byte) token {
 	return tok
 }
 
-func findHashes(b []byte) {
-	if len(b) == *length {
-		if t := zeroCount(b); t.count >= *target {
-			ch <- t
+func findHashes(s string, ch chan<- string) {
+	if len(s) == *length {
+		if t := zeroCount(s); t.count >= *target {
+			ch <- t.String()
 		}
 		return
 	}
 
 	for x := 33; x < 127; x++ {
-		findHashes(append(b, byte(x)))
-	}
-}
-
-func makeWork(yield func(string) bool, prefix string, itemSize int) {
-	if len(prefix) == itemSize {
-		yield(prefix)
-		return
-	}
-	for a := 33; a < 127; a++ {
-		makeWork(yield, fmt.Sprintf("%s%c", prefix, a), itemSize)
+		findHashes(fmt.Sprintf("%s%c", s, x), ch)
 	}
 }
 
 func main() {
 	flag.Parse()
+	fmt.Println("target =", *target, "len =", *length)
 
-	itemSize := *length / 2
-	fmt.Println("target =", *target, "len =", *length, "itemSize =", itemSize)
-	tokenFilename := fmt.Sprintf("%s_%d_%d", tokenBase, *target, *length)
-
-	var wq *work.Queue
-	var tokenFP *os.File
-	var err error
+	var wq *util.WorkQueue
 	if len(*checkpoint) != 0 {
-		wq = work.NewFromCheckpoint(*checkpoint)
-		tokenFP, err = os.OpenFile(tokenFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
+		wq = util.NewFromCheckpoint(*checkpoint)
 	} else {
-		wq = work.NewFromSeq(func(yield func(string) bool) {
-			makeWork(yield, "", itemSize)
-		})
-		tokenFP, err = os.Create(tokenFilename)
-	}
-	util.Must(err)
-
-	// Reading token
-	ch = make(chan token)
-	done := make(chan struct{})
-	go func() {
-		for t := range ch {
-			_, err := fmt.Fprintf(tokenFP, "%s %s %d %s\n", t.value, t.hash, t.count, time.Now().Format(time.DateTime))
-			util.Must(err)
+		var items []string
+		var makeWork func(string)
+		makeWork = func(path string) {
+			if len(path) == *length/2 {
+				items = append(items, path)
+				return
+			}
+			for a := 33; a < 127; a++ {
+				makeWork(fmt.Sprintf("%s%c", path, a))
+			}
 		}
-		util.Must(tokenFP.Close())
-		done <- struct{}{}
-	}()
-
-	sem := make(chan struct{}, *workers)
-	for value, ok := wq.Next(); ok; value, ok = wq.Next() {
-		sem <- struct{}{}
-		go func() {
-			findHashes([]byte(value))
-			wq.MarkFinished(value)
-			<-sem
-		}()
+		makeWork("")
+		wq = util.NewWorkQueue(items, findHashes)
 	}
-
-	// Wait for completion
-	for n := *workers; n > 0; n-- {
-		sem <- struct{}{}
-	}
-	close(ch)
-	<-done
-	fmt.Println()
+	wq.Run()
 }
