@@ -22,12 +22,14 @@ const (
 
 type Option func(*WorkQueue)
 
+// SetCheckpointInterval sets the interval at which a work checkpoint is written to disk.
 func SetCheckpointInterval(d time.Duration) Option {
 	return func(wq *WorkQueue) {
 		wq.checkpointInterval = d
 	}
 }
 
+// SetNumWorkers sets the number of goroutines that are concurrently doing work.
 func SetNumWorkers(i int) Option {
 	return func(wq *WorkQueue) {
 		wq.numWorkers = i
@@ -39,6 +41,10 @@ type item struct {
 	complete bool
 }
 
+// WorkQueue stores a list of tasks to complete, hands each task to a user-provided function, and
+// writes any "successes", as defined by the user-provided function, to disk. It checkpoints its
+// progress along the way so that it can be stopped and restarted from a checkpoint while needing
+// minimal work to be redone.
 type WorkQueue struct {
 	bar *progressbar.ProgressBar
 
@@ -78,6 +84,8 @@ func bar(size int) *progressbar.ProgressBar {
 	)
 }
 
+// NewFromCheckpoint creates a WorkQueue from a checkpoint file that an earlier WorkQueue has
+// written.
 func NewFromCheckpoint(fname string, options ...Option) *WorkQueue {
 	wq := &WorkQueue{
 		checkpointInterval: defaultCheckpointInterval,
@@ -97,6 +105,7 @@ func NewFromCheckpoint(fname string, options ...Option) *WorkQueue {
 	return wq
 }
 
+// NewWorkQueue creates a WorkQueue with a list of work to perform.
 func NewWorkQueue(items []string, f func(string, chan<- string), options ...Option) *WorkQueue {
 	wq := &WorkQueue{
 		checkpointInterval: defaultCheckpointInterval,
@@ -115,6 +124,7 @@ func NewWorkQueue(items []string, f func(string, chan<- string), options ...Opti
 	return wq
 }
 
+// Run starts the work and blocks until it is completed.
 func (wq *WorkQueue) Run() {
 	go wq.checkpoint()
 
