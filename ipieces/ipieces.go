@@ -266,5 +266,5 @@ func (p Puzzle) Run() {
 		port = "8080"
 	}
 	fmt.Println("Listening on port", port)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
