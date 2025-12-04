@@ -10,6 +10,7 @@ const maxBuf = 1024 * 1024 * 1024 // 1 GiB
 func readLines(file string, size int) ([]string, error) {
 	f, err := os.Open(file)
 	Must(err)
+	defer f.Close()
 
 	buf := make([]byte, size)
 	scanner := bufio.NewScanner(f)

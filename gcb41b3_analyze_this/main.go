@@ -30,7 +30,7 @@ If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!`
 
 func main() {
-	histo := util.Histogram(strings.ToLower(text))
+	histo := util.RuneCount(strings.ToLower(text))
 	fmt.Println(histo['m'] + histo['u'])
 	fmt.Println(histo['x'] + histo['y'])
 	fmt.Println(histo['x'] + histo['p'])
