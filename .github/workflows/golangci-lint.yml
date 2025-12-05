@@ -1,7 +1,7 @@
 name: golangci-lint
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "master", "dev" ]
   # I think this is causing #38.
   # pull_request:
     # branches: [ "master" ]
