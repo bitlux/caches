@@ -58,3 +58,19 @@ func FromDigitsBase[T constraints.Integer](digits []T, base int) int {
 func FromDigits[T constraints.Integer](digits []T) int {
 	return FromDigitsBase(digits, 10)
 }
+
+// CollatzStoppingTime returns the number of steps in the Collatz (3n+1) sequence before reaching 1.
+func CollatzStoppingTime(i int) int {
+	n := 0
+	for {
+		if i == 1 {
+			return n
+		}
+		if i%2 == 0 {
+			i /= 2
+		} else {
+			i = 3*i + 1
+		}
+		n++
+	}
+}

@@ -66,3 +66,17 @@ func TestFromDigits(t *testing.T) {
 		}
 	}
 }
+
+func TestCollatzStoppingTime(t *testing.T) {
+	for _, tc := range []struct {
+		input, want int
+	}{
+		{1, 0},
+		{19, 20},
+		{11, 14},
+	} {
+		if got := CollatzStoppingTime(tc.input); got != tc.want {
+			t.Errorf("CollatzStoppingTime(%d) = %d, want %d", tc.input, got, tc.want)
+		}
+	}
+}
