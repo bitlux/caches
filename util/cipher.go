@@ -1,6 +1,11 @@
 package util
 
-import "golang.org/x/exp/constraints"
+import (
+	"crypto/sha256"
+	"encoding/hex"
+
+	"golang.org/x/exp/constraints"
+)
 
 // A1Encode encodes a rune in the range [A-Za-z] using the A=1, ..., Z=26 substitution cipher.
 func A1Encode[T constraints.Integer](n T) int {
@@ -32,4 +37,10 @@ func ROT(n int, w string) string {
 		ret += string(rune(int(l)-'a'+n)%26 + 'a')
 	}
 	return ret
+}
+
+// SHA256 returns the SHA-256 hash of the input as a hex-encoded string.
+func SHA256(s string) string {
+	hash := sha256.Sum256([]byte(s))
+	return hex.EncodeToString(hash[:])
 }
