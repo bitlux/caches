@@ -28,24 +28,23 @@ func main() {
 
 OUTER:
 	for _, w1 := range threes {
-		for l4 := 'a'; l4 <= 'z'; l4++ {
-			for l5 := 'a'; l5 <= 'z'; l5++ {
+		for l4 := range util.Alphabet() {
+			for l5 := range util.Alphabet() {
 				w2 := fmt.Sprintf("%s%c%c", w1, l4, l5)
 				if !dict[w2] {
 					continue
 				}
-				for l6 := 'a'; l6 <= 'z'; l6++ {
+				for l6 := range util.Alphabet() {
 					w3 := fmt.Sprintf("%s%c", w2, l6)
 					if !dict[w3] {
 						continue
 					}
-
-					for l7 := 'a'; l7 <= 'z'; l7++ {
+					for l7 := range util.Alphabet() {
 						w4 := fmt.Sprintf("%s%c%c", w3, w1[1], l7)
 						if !dict[w4] {
 							continue
 						}
-						for l8 := 'a'; l8 <= 'z'; l8++ {
+						for l8 := range util.Alphabet() {
 							w5 := fmt.Sprintf("%s%c", w4, l8)
 							if !dict[w5] {
 								continue
