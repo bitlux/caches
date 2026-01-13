@@ -6,11 +6,13 @@ import (
 	"strconv"
 )
 
+// TODO: Clean this up and move to combinartorics.go.
+
 func factorial(n int) int {
 	if n <= 2 {
 		return n
 	}
-	return n*factorial(n-1)
+	return n * factorial(n-1)
 }
 
 // Permutations returns all permutations of the elements of s. If the elements
