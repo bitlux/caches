@@ -2,8 +2,8 @@ package util
 
 import "slices"
 
-// Digits contains the digits 0-9. It is a common input to Explode.
-var Digits = []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+// D contains the digits 0-9. It is a common input to Explode.
+var D = []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 // Explode takes a list of options, where each option is a list of ints. It returns the cross
 // product of all options. Explode({1, 2}, {3, 4}) = {{1, 3}, {1, 4}, {2, 3}, {2, 4}}
