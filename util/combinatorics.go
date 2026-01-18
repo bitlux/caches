@@ -1,27 +1,30 @@
 package util
 
-import "slices"
+import (
+	"iter"
+)
 
 // D contains the digits 0-9. It is a common input to Explode.
 var D = []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 // Explode takes a list of options, where each option is a list of ints. It returns the cross
 // product of all options. Explode({1, 2}, {3, 4}) = {{1, 3}, {1, 4}, {2, 3}, {2, 4}}
-func Explode(starting [][]int) [][]int {
-	return explodeHelper(0, starting, [][]int{{}})
-}
+func Explode(vals ...[]int) iter.Seq[[]int] {
+	type fn = func([]int) bool
 
-func explodeHelper(index int, values [][]int, soFar [][]int) [][]int {
-	if index == len(values) {
-		return soFar
-	}
+	var helper func(yield fn, index int, soFar []int)
+	helper = func(yield fn, index int, soFar []int) {
+		if index == len(vals) {
+			yield(soFar)
+			return
+		}
 
-	temp := [][]int{}
-	for _, value := range values[index] {
-		for _, sf := range soFar {
-			cl := slices.Clone(sf)
-			temp = append(temp, append(cl, value))
+		for _, val := range vals[index] {
+			helper(yield, index+1, append(soFar, val))
 		}
 	}
-	return explodeHelper(index+1, values, temp)
+
+	return func(yield fn) {
+		helper(yield, 0, []int{})
+	}
 }

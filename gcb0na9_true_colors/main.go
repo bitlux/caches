@@ -64,10 +64,11 @@ func testRow(index int, candidate []int) bool {
 }
 
 func main() {
-	entries := util.Explode([][]int{{3}, {7}, {2}, {2, 3, 4}, util.D, {7}, util.D, {1}, {2}, {1},
-		{4, 5}, util.D, {3}, {3}, util.D})
+	entries := util.Explode(
+		[]int{3}, []int{7}, []int{2}, []int{2, 3, 4}, util.D, []int{7}, util.D,
+		[]int{1}, []int{2}, []int{1}, []int{4, 5}, util.D, []int{3}, []int{3}, util.D)
 OUTER:
-	for _, entry := range entries {
+	for entry := range entries {
 		for i := range 15 {
 			if !testRow(i, entry) {
 				continue OUTER
