@@ -24,7 +24,7 @@ func TestExplode(t *testing.T) {
 			want:   [][]int{{3, 1, 4}, {3, 1, 5}, {3, 1, 6}, {3, 2, 4}, {3, 2, 5}, {3, 2, 6}},
 		},
 	} {
-		coll := slices.Collect(Explode2(tc.inputs...))
+		coll := slices.Collect(Explode(tc.inputs...))
 		diff := cmp.Diff(coll, tc.want)
 		if diff != "" {
 			t.Errorf("Explode(%v): %s", tc.inputs, diff)
