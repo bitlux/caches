@@ -22,7 +22,7 @@ jobs:
       - name: Download config
         run: curl -fsS -o .golangci.yml https://raw.githubusercontent.com/bitlux/bitlux/main/golangci.yml
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: latest
+          version: v2.6
           args: --verbose
