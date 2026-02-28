@@ -12,7 +12,9 @@ func Wget(url string) []byte {
 	Must(err)
 
 	body, err := io.ReadAll(res.Body)
-	res.Body.Close()
+	defer func() {
+		Must(res.Body.Close())
+	}()
 	Must(err)
 	if res.StatusCode > 299 {
 		Must(fmt.Errorf("fail: status code %d", res.StatusCode))

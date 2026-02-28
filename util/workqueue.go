@@ -195,7 +195,7 @@ func (wq *WorkQueue) checkpoint() {
 			if s.complete {
 				i = 1
 			}
-			_, err := sb.WriteString(fmt.Sprintf("%s %d\n", s.value, i))
+			_, err := fmt.Fprintf(&sb, "%s %d\n", s.value, i)
 			Must(err)
 		}
 

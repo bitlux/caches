@@ -26,7 +26,7 @@ loop:
 	for k, v := range m {
 		switch r := any(k).(type) {
 		case int32:
-			if !(unicode.IsGraphic(r) || unicode.IsSpace(r)) {
+			if !unicode.IsGraphic(r) && !unicode.IsSpace(r) {
 				isUnicode = false
 				break loop
 			}
