@@ -122,6 +122,14 @@ func (f *FourSquare) String() string {
 	return b.String()
 }
 
+func sanitizeText(s string) string {
+	s = strings.ToUpper(s)
+	s = strings.ReplaceAll(s, "J", "I")
+	s = strings.ReplaceAll(s, "'", "")
+	s = strings.ReplaceAll(s, " ", "")
+	return s
+}
+
 func removeDuplicates(s string) string {
 	m := map[rune]bool{}
 	var out strings.Builder
@@ -134,11 +142,8 @@ func removeDuplicates(s string) string {
 	return out.String()
 }
 
-func keywordToMatrix(s string) [5][5]rune {
-	s = strings.ToUpper(s)
-	s = strings.ReplaceAll(s, "J", "I")
-	s = strings.ReplaceAll(s, "'", "")
-
+func keywordToMatrix(s string, horizontal bool) [5][5]rune {
+	s = sanitizeText(s)
 	alphabet := []rune{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}
 	for i, c := range removeDuplicates(s) {
 		index := slices.Index(alphabet, c)
@@ -147,16 +152,23 @@ func keywordToMatrix(s string) [5][5]rune {
 	var m [5][5]rune
 	for row := range 5 {
 		for col := range 5 {
-			m[col][row] = alphabet[5*row+col]
+			if horizontal {
+				m[row][col] = alphabet[5*row+col]
+			} else {
+				m[col][row] = alphabet[5*row+col]
+			}
 		}
 	}
 	return m
 }
 
-func NewFourSquare(key1, key2 string) *FourSquare {
+// NewFourSquare creates a new four square cipher instance.
+// GC49KY3 uses horizontal = false.
+// CacheSleuth uses horizontal = true.
+func NewFourSquare(key1, key2 string, horizontal bool) *FourSquare {
 	c := &FourSquare{
-		two:     keywordToMatrix(key1),
-		four:    keywordToMatrix(key2),
+		two:     keywordToMatrix(key1, horizontal),
+		four:    keywordToMatrix(key2, horizontal),
 		twoMap:  map[rune]point{},
 		fourMap: map[rune]point{},
 	}
@@ -171,6 +183,7 @@ func NewFourSquare(key1, key2 string) *FourSquare {
 }
 
 func (f *FourSquare) Encode(s string) string {
+	s = sanitizeText(s)
 	var out strings.Builder
 	for i := 0; i < len(s); i += 2 {
 		nw := letterToPoint(s[i])
@@ -182,6 +195,7 @@ func (f *FourSquare) Encode(s string) string {
 }
 
 func (f *FourSquare) Decode(s string) string {
+	s = sanitizeText(s)
 	var out strings.Builder
 	for i := 0; i < len(s); i += 2 {
 		ne := f.twoMap[rune(s[i])]

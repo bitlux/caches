@@ -32,8 +32,8 @@ func main() {
 	var best *util.FourSquare
 
 	for key1 := range data.OneK() {
-		for key2 := range data.TenK() {
-			c := util.NewFourSquare(key1, key2)
+		for key2 := range data.OneK() {
+			c := util.NewFourSquare(key1, key2, false)
 			dec := c.Decode(ct)
 			if score := data.BigramScore(dec); score > max {
 				max = score
