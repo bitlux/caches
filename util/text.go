@@ -1,6 +1,8 @@
 package util
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"iter"
 	"slices"
 )
@@ -31,4 +33,10 @@ func Alphabet() iter.Seq[rune] {
 			}
 		}
 	}
+}
+
+// SHA256 returns the SHA-256 hash of the input as a hex-encoded string.
+func SHA256(s string) string {
+	hash := sha256.Sum256([]byte(s))
+	return hex.EncodeToString(hash[:])
 }
