@@ -94,8 +94,8 @@ func NewFourSquare(key1, key2 string, horizontal bool) *FourSquare {
 
 	for row := range 5 {
 		for col := range 5 {
-			c.twoMap[c.Two[row][col]] = foursquare.Point{row, col}
-			c.fourMap[c.Four[row][col]] = foursquare.Point{row, col}
+			c.twoMap[c.Two[row][col]] = foursquare.Point{Row: row, Col: col}
+			c.fourMap[c.Four[row][col]] = foursquare.Point{Row: row, Col: col}
 		}
 	}
 	return c
