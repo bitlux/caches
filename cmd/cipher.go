@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bitlux/caches/util"
+	"github.com/bitlux/caches/lib/cipher"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 	fmt.Print("A1Z26: ")
 	for _, w := range os.Args[1:] {
 		for _, r := range w {
-			fmt.Printf("%d ", util.A1Encode(r))
+			fmt.Printf("%d ", cipher.A1Encode(r))
 		}
 	}
 	fmt.Println()

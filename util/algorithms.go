@@ -4,6 +4,8 @@ import (
 	"maps"
 	"slices"
 	"strconv"
+
+	"github.com/bitlux/caches/lib/util"
 )
 
 // TODO: Clean this up and move to combinartorics.go.
@@ -60,7 +62,7 @@ func unique(nums [][]int) [][]int {
 	var ret [][]int
 	for _, k := range slices.Sorted(maps.Keys(m)) {
 		n, _ := strconv.Atoi(k)
-		ret = append(ret, Digits(n))
+		ret = append(ret, util.Digits(n))
 	}
 	return ret
 }
