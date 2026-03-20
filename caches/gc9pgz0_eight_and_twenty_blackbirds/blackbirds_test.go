@@ -1,4 +1,7 @@
 // Run with go test -bench=.
+// Usage:
+//
+//	go test -bench .
 package test
 
 import (
@@ -7,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/bitlux/caches/lib/cipher"
-	"github.com/bitlux/caches/lib/util"
+	"github.com/bitlux/caches/lib/data"
 )
 
 const targetLen = 28
@@ -15,7 +18,7 @@ const targetLen = 28
 var pi string
 
 func init() {
-	pi = util.ReadLines("../data/pi")[0]
+	pi = data.PiString()
 }
 
 func slidingWindowCount(blackbirds map[byte]bool) string {

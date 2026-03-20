@@ -66,6 +66,17 @@ func set(it iter.Seq[string]) map[string]bool {
 }
 
 // ----------------------------------------------------------------------------
+// Pi
+
+//go:embed pi
+var pi string
+
+// PiString returns the digits of pi as a string (including the leading "3.").
+func PiString() string {
+	return pi
+}
+
+// ----------------------------------------------------------------------------
 // Bigrams
 
 //go:embed english_2grams.csv
