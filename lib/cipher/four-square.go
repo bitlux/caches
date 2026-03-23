@@ -2,18 +2,28 @@ package cipher
 
 import (
 	"errors"
+	"regexp"
 	"slices"
 	"strings"
 )
 
-// ----------------------------------------------------------------------------
-// Four-square
+var whitespaceRE = regexp.MustCompile(`\s+`)
+
+// TODO: type polybius [5][5]byte
+
+var unkeyed = [5][5]byte{
+	{'A', 'B', 'C', 'D', 'E'},
+	{'F', 'G', 'H', 'I', 'K'},
+	{'L', 'M', 'N', 'O', 'P'},
+	{'Q', 'R', 'S', 'T', 'U'},
+	{'V', 'W', 'X', 'Y', 'Z'},
+}
 
 type point struct {
 	Row, Col int
 }
 
-func letterToPoint(b byte) point {
+func unkeyedLetterToPoint(b byte) point {
 	p := point{-1, -1}
 	switch b {
 	case 'A', 'B', 'C', 'D', 'E':
@@ -42,42 +52,46 @@ func letterToPoint(b byte) point {
 	return p
 }
 
-var unkeyed = [5][5]rune{
-	{'A', 'B', 'C', 'D', 'E'},
-	{'F', 'G', 'H', 'I', 'K'},
-	{'L', 'M', 'N', 'O', 'P'},
-	{'Q', 'R', 'S', 'T', 'U'},
-	{'V', 'W', 'X', 'Y', 'Z'},
+func keyedLetterToPoint(matrix [5][5]byte, b byte) point {
+	for row := range 5 {
+		for col := range 5 {
+			if matrix[row][col] == byte(b) {
+				return point{Row: row, Col: col}
+			}
+		}
+	}
+	return point{Row: -1, Col: -1}
 }
 
 func sanitizeText(s string) string {
 	s = strings.ToUpper(s)
 	s = strings.ReplaceAll(s, "J", "I")
 	s = strings.ReplaceAll(s, "'", "")
-	s = strings.ReplaceAll(s, " ", "")
+	s = whitespaceRE.ReplaceAllString(s, "")
 	return s
 }
 
-func removeDuplicates(s string) string {
-	m := map[rune]bool{}
-	var out strings.Builder
-	for _, c := range s {
+func removeDuplicates(s string) []byte {
+	m := map[byte]bool{}
+	var ret []byte
+	for i := 0; i < len(s); i++ {
+		c := s[i]
 		if !m[c] {
-			out.WriteRune(c)
+			ret = append(ret, c)
 		}
 		m[c] = true
 	}
-	return out.String()
+	return ret
 }
 
-func keywordToMatrix(s string, horizontal bool) [5][5]rune {
+func KeywordToMatrix(s string, horizontal bool) [5][5]byte {
 	s = sanitizeText(s)
-	alphabet := []rune{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}
+	alphabet := []byte{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}
 	for i, c := range removeDuplicates(s) {
-		index := slices.Index(alphabet, c)
-		alphabet = slices.Concat(alphabet[:i], []rune{c}, alphabet[i:index], alphabet[index+1:])
+		index := slices.Index(alphabet, byte(c))
+		alphabet = slices.Concat(alphabet[:i], []byte{c}, alphabet[i:index], alphabet[index+1:])
 	}
-	var m [5][5]rune
+	var m [5][5]byte
 	for row := range 5 {
 		for col := range 5 {
 			if horizontal {
@@ -94,34 +108,34 @@ func keywordToMatrix(s string, horizontal bool) [5][5]rune {
 // 4 3
 type FourSquare struct {
 	// two and four are for printing and encoding
-	Two, Four [5][5]rune
+	two, four [5][5]byte
 
 	// twoMap and fourMap are for decoding
-	twoMap, fourMap map[rune]point
+	twoMap, fourMap map[byte]point
 }
 
 func (f *FourSquare) String() string {
 	var b strings.Builder
 	for row := range 5 {
 		for col := range 5 {
-			b.WriteRune(unkeyed[row][col])
+			b.WriteByte(unkeyed[row][col])
 		}
-		b.WriteRune(' ')
+		b.WriteByte(' ')
 		for col := range 5 {
-			b.WriteRune(f.Two[row][col])
+			b.WriteByte(f.two[row][col])
 		}
-		b.WriteRune('\n')
+		b.WriteByte('\n')
 	}
-	b.WriteRune('\n')
+	b.WriteByte('\n')
 	for row := range 5 {
 		for col := range 5 {
-			b.WriteRune(f.Four[row][col])
+			b.WriteByte(f.four[row][col])
 		}
-		b.WriteRune(' ')
+		b.WriteByte(' ')
 		for col := range 5 {
-			b.WriteRune(unkeyed[row][col])
+			b.WriteByte(unkeyed[row][col])
 		}
-		b.WriteRune('\n')
+		b.WriteByte('\n')
 	}
 	return b.String()
 }
@@ -131,19 +145,26 @@ func (f *FourSquare) String() string {
 // CacheSleuth uses horizontal = true.
 func NewFourSquare(key1, key2 string, horizontal bool) *FourSquare {
 	c := &FourSquare{
-		Two:     keywordToMatrix(key1, horizontal),
-		Four:    keywordToMatrix(key2, horizontal),
-		twoMap:  map[rune]point{},
-		fourMap: map[rune]point{},
+		two:     KeywordToMatrix(key1, horizontal),
+		four:    KeywordToMatrix(key2, horizontal),
+		twoMap:  map[byte]point{},
+		fourMap: map[byte]point{},
 	}
 
 	for row := range 5 {
 		for col := range 5 {
-			c.twoMap[c.Two[row][col]] = point{Row: row, Col: col}
-			c.fourMap[c.Four[row][col]] = point{Row: row, Col: col}
+			c.twoMap[c.two[row][col]] = point{Row: row, Col: col}
+			c.fourMap[c.four[row][col]] = point{Row: row, Col: col}
 		}
 	}
 	return c
+}
+
+func newFourSquareFromMatrices(two, four [5][5]byte) *FourSquare {
+	return &FourSquare{
+		two:  two,
+		four: four,
+	}
 }
 
 func (f *FourSquare) Encode(s string) (string, error) {
@@ -154,10 +175,10 @@ func (f *FourSquare) Encode(s string) (string, error) {
 
 	var out strings.Builder
 	for i := 0; i < len(s); i += 2 {
-		nw := letterToPoint(s[i])
-		se := letterToPoint(s[i+1])
-		out.WriteRune(f.Two[nw.Row][se.Col])
-		out.WriteRune(f.Four[se.Row][nw.Col])
+		nw := unkeyedLetterToPoint(s[i])
+		se := unkeyedLetterToPoint(s[i+1])
+		out.WriteByte(f.two[nw.Row][se.Col])
+		out.WriteByte(f.four[se.Row][nw.Col])
 	}
 	return out.String(), nil
 }
@@ -165,15 +186,21 @@ func (f *FourSquare) Encode(s string) (string, error) {
 func (f *FourSquare) Decode(s string) (string, error) {
 	s = sanitizeText(s)
 	if len(s)%2 != 0 {
-		return "", errors.New("plaintext length must be even")
+		return "", errors.New("ciphertext length must be even")
 	}
 
 	var out strings.Builder
+	var ne, sw point
 	for i := 0; i < len(s); i += 2 {
-		ne := f.twoMap[rune(s[i])]
-		sw := f.fourMap[rune(s[i+1])]
-		out.WriteRune(unkeyed[ne.Row][sw.Col])
-		out.WriteRune(unkeyed[sw.Row][ne.Col])
+		if f.twoMap != nil {
+			ne = f.twoMap[s[i]]
+			sw = f.fourMap[s[i+1]]
+		} else {
+			ne = keyedLetterToPoint(f.two, s[i])
+			sw = keyedLetterToPoint(f.four, s[i+1])
+		}
+		out.WriteByte(unkeyed[ne.Row][sw.Col])
+		out.WriteByte(unkeyed[sw.Row][ne.Col])
 	}
 	return out.String(), nil
 }
