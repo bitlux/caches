@@ -59,6 +59,19 @@ func FromDigits[T constraints.Integer](digits []T) int {
 	return FromDigitsBase(digits, 10)
 }
 
+// DigitalRoot returns the digital root of n.
+func DigitalRoot(n int) int {
+	for n > 9 {
+		digits := Digits(n)
+		sum := 0
+		for _, d := range digits {
+			sum += d
+		}
+		n = sum
+	}
+	return n
+}
+
 // CollatzStoppingTime returns the number of steps in the Collatz (3n+1) sequence before reaching 1.
 func CollatzStoppingTime(i int) int {
 	n := 0

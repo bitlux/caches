@@ -66,14 +66,29 @@ func set(it iter.Seq[string]) map[string]bool {
 }
 
 // ----------------------------------------------------------------------------
-// Pi
+// Numbers
 
 //go:embed pi
 var pi string
 
+//go:embed tau
+var tau string
+
 // PiString returns the digits of pi as a string (including the leading "3.").
 func PiString() string {
 	return pi
+}
+
+// TauDigits returns the digits of tau (2*pi) as a slice (including the leading 6).
+func TauDigits() []byte {
+	var ret []byte
+	for _, s := range tau {
+		i := s - '0'
+		if i >= 0 && i <= 9 {
+			ret = append(ret, byte(i))
+		}
+	}
+	return ret
 }
 
 // ----------------------------------------------------------------------------

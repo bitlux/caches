@@ -67,6 +67,25 @@ func TestFromDigits(t *testing.T) {
 	}
 }
 
+func TestDigitalRoot(t *testing.T) {
+	for _, tc := range []struct {
+		input, want int
+	}{
+		{10, 1},
+		{11, 2},
+		{1, 1},
+		{9, 9},
+		{33, 6},
+		{1234, 1},
+		{9999, 9},
+	} {
+		got := DigitalRoot(tc.input)
+		if got != tc.want {
+			t.Errorf("DigitalRoot(%d) = %d, want %d", tc.input, got, tc.want)
+		}
+	}
+}
+
 func TestCollatzStoppingTime(t *testing.T) {
 	for _, tc := range []struct {
 		input, want int
