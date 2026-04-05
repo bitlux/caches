@@ -9,15 +9,7 @@ import (
 )
 
 const (
-	smallGrid = `.|.F.F--7.L.
-F--7||.L|.F7
-S7LL-J-.|-||
-||.J..7.L-J|
-|-F--7|J.-.|
-|.|J.L--7.-|
-L-J.-.|.L--J`
-
-	bigGrid = `--F---7.-..F--7|L.......F--------77......F--7.JJ.J........||..F-7..F------7.....|J7-..JFL........|..
+	gridStr = `--F---7.-..F--7|L.......F--------77......F--7.JJ.J........||..F-7..F------7.....|J7-..JFL........|..
 J.|J..|L.F.|.||.7F-7...|L---7.J..L77LF-7.|-FJ.L.F---7.......F.|.|.FL--7..FJ..F--7|....LF..L..F..L||.
 .FJ.F-J....L7.L7||J|FF--7L..|F-7.||F.|.L-J.|....|.|FJ..F---77.|FJ..7.J|.FJJ.FJ..|..F--7L...J.F7..7..
 FJ..|.F-7...|.FJ.|FJ.L7.L-7.||.L7L|.FJ..F7L|..F-J..|J..|.|.L7.||-.7.F-J.|...|-.L|F.|..|.|..|FJL7-...
@@ -78,7 +70,6 @@ func (p Point) Neighbors() []Point {
 }
 
 var (
-	gridStr          = bigGrid
 	grid             [][]rune
 	numRows, numCols int
 	onPath           = map[Point]bool{}
