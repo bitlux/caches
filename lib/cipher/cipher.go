@@ -10,6 +10,9 @@ import (
 
 // A1Encode encodes a rune in the range [A-Za-z] using the A=1, ..., Z=26 substitution cipher.
 func A1Encode[T constraints.Integer](n T) int {
+	if n == ' ' {
+		return int(n)
+	}
 	if n >= 'A' && n <= 'Z' {
 		return int(n - 'A' + 1)
 	}
@@ -34,8 +37,12 @@ func CBF(s string) []int {
 // ROT rotates w by n letter. ROT(13, "terra") = "green". Currently only handles lowercase letters.
 func ROT(n int, w string) string {
 	ret := ""
-	for _, l := range w {
-		ret += string(rune(int(l)-'a'+n)%26 + 'a')
+	for _, r := range w {
+		if r >= 'a' && r <= 'z' {
+			ret += string(rune(int(r)-'a'+n)%26 + 'a')
+		} else {
+			ret += string(r)
+		}
 	}
 	return ret
 }

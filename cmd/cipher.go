@@ -3,22 +3,23 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/bitlux/caches/lib/cipher"
 )
 
 func main() {
-	fmt.Print("       ")
-	for _, w := range os.Args[1:] {
-		fmt.Printf("%s ", w)
-	}
-	fmt.Println()
+	args := strings.Join(os.Args[1:], " ")
+	fmt.Println(args)
 
-	fmt.Print("A1Z26: ")
-	for _, w := range os.Args[1:] {
-		for _, r := range w {
-			fmt.Printf("%d ", cipher.A1Encode(r))
-		}
+	fmt.Println("\nA1Z26")
+	for _, r := range args {
+		fmt.Printf("%d ", cipher.A1Encode(r))
 	}
-	fmt.Println()
+
+	fmt.Println("\n\nROT")
+	for i := 1; i < 26; i++ {
+		fmt.Printf("%2d %s\n", i, cipher.ROT(i, args))
+	}
+
 }
