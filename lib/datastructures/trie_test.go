@@ -55,5 +55,5 @@ func TestTrie(t *testing.T) {
 		}
 	}
 
-	fmt.Println(trie.Enumerate())
+	fmt.Println(trie.Elements())
 }

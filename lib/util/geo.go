@@ -15,5 +15,5 @@ func ToCoord(digits []int) string {
 	case 15:
 		return fmt.Sprintf("%s %s", ToCoord(digits[:7]), ToCoord(digits[7:]))
 	}
-	return ""
+	return fmt.Sprintf("Wrong number of digits (%d), want 7, 8, or 15", len(digits))
 }
