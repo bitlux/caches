@@ -32,7 +32,6 @@ func main() {
 	}
 
 	var coords []int
-
 	for row := range 16 {
 		for digit := range 10 {
 			location := series[digit][row]

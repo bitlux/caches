@@ -57,3 +57,25 @@ func TestFourSquare(t *testing.T) {
 		t.Errorf("Decode(Encode(%q)) = %q, want %q", pt, got, pt)
 	}
 }
+
+func TestTwoSquare(t *testing.T) {
+	ts := NewTwoSquare("dialogue", "biography")
+	pt := strings.ToUpper("anotherdigraphicsetupx")
+	ct, err := ts.Encode(pt)
+	if err != nil {
+		t.Fatalf("got unexpected error: %v", err)
+	}
+
+	if want := "IRRTEHMKGIMEQGRUNMMZSV"; ct != want {
+		t.Errorf("Encode() = %q, want %q", ct, want)
+	}
+
+	pt2, err := ts.Decode(ct)
+	if err != nil {
+		t.Fatalf("got unexpected error: %v", err)
+	}
+
+	if pt2 != pt {
+		t.Errorf("Encode() = %q, want %q", pt2, pt)
+	}
+}
