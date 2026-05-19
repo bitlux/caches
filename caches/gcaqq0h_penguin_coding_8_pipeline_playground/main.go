@@ -119,7 +119,7 @@ func findPath() {
 				currCol++
 				dir = 'E'
 			default:
-				panic(fmt.Errorf("S: (%d, %d) = %c", currRow, currCol, grid[currRow][currCol]))
+				panic(fmt.Errorf("S: (%d, %d) = %c", currRow, currCol, grid[currRow][currCol])) //nolint:staticcheck
 			}
 		case 'E':
 			switch grid[currRow][currCol] {
@@ -132,7 +132,7 @@ func findPath() {
 				currRow++
 				dir = 'S'
 			default:
-				panic(fmt.Errorf("E: (%d, %d) = %c", currRow, currCol, grid[currRow][currCol]))
+				panic(fmt.Errorf("E: (%d, %d) = %c", currRow, currCol, grid[currRow][currCol])) //nolint:staticcheck
 			}
 		case 'N':
 			switch grid[currRow][currCol] {
