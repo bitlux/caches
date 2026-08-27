@@ -21,6 +21,9 @@ func A1Encode[T constraints.Integer](n T) int {
 
 // A1Decode decodes a number in the range [1-26] using the A=1, ..., Z=26 substitution cipher.
 func A1Decode(n int) rune {
+	if n == 0 {
+		return 'Z'
+	}
 	return rune(n + 'A' - 1)
 }
 
