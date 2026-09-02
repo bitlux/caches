@@ -99,3 +99,23 @@ func TestCollatzStoppingTime(t *testing.T) {
 		}
 	}
 }
+
+func TestConvertBase(t *testing.T) {
+	for _, tc := range []struct {
+		input, want string
+		from, to    int
+	}{
+		{"3", "11", 10, 2},
+		{"31", "13", 4, 10},
+		{"101010", "42", 2, 10},
+	} {
+		got, err := ConvertBase(tc.input, tc.from, tc.to)
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+		if got != tc.want {
+			t.Errorf("ConvertBase(%q, %d, %d) = %q, want %q", tc.input, tc.from, tc.to, got, tc.want)
+		}
+	}
+
+}

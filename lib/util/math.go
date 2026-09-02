@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"math/big"
 	"slices"
 
 	"golang.org/x/exp/constraints"
@@ -86,4 +87,16 @@ func CollatzStoppingTime(i int) int {
 		}
 		n++
 	}
+}
+
+// ConvertBase converts a numeric representation to a different base.
+// Returns an error if a digit in num is not valid in base from.
+func ConvertBase(num string, from, to int) (string, error) {
+	b := new(big.Int)
+	_, ok := b.SetString(num, from)
+	if !ok {
+		return "", errors.New("bad")
+	}
+
+	return b.Text(to), nil
 }
