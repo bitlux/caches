@@ -16,7 +16,7 @@ const (
 
 func decode(ct, key string) (string, error) {
 	if len(ct) > len(key) {
-		return "", errors.New("Key is shorter than ciphertext")
+		return "", errors.New("key is shorter than ciphertext")
 	}
 
 	pt := ""
@@ -24,7 +24,7 @@ func decode(ct, key string) (string, error) {
 		ki := strings.Index(keyspace, key[i:i+1])
 		cti := strings.Index(keyspace, ct[i:i+1])
 		pti := (cti + ki) % N
-		pt += fmt.Sprintf("%s", keyspace[pti:pti+1])
+		pt += keyspace[pti : pti+1]
 	}
 	return pt, nil
 }
