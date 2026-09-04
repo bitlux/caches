@@ -43,6 +43,8 @@ func ROT(n int, w string) string {
 	for _, r := range w {
 		if r >= 'a' && r <= 'z' {
 			ret += string(rune(int(r)-'a'+n)%26 + 'a')
+		} else if r >= 'A' && r <= 'Z' {
+			ret += string(rune(int(r)-'A'+n)%26 + 'A')
 		} else {
 			ret += string(r)
 		}
