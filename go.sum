@@ -2,6 +2,8 @@ github.com/bitlux/vpnapi v0.0.0-20250308212757-c8443b09b42b h1:30NFRq5CBKPVH9FeY
 github.com/bitlux/vpnapi v0.0.0-20250308212757-c8443b09b42b/go.mod h1:ou6ccQPRIv8uzPNeLaRLxnwd2felkT30fwGnJtbVYCg=
 github.com/chengxilo/virtualterm v1.0.4 h1:Z6IpERbRVlfB8WkOmtbHiDbBANU7cimRIof7mk9/PwM=
 github.com/chengxilo/virtualterm v1.0.4/go.mod h1:DyxxBZz/x1iqJjFxTFcr6/x+jSpqN0iwWCOK1q10rlY=
+github.com/claygod/PiHex v0.0.0-20260415170130-c9efef19553c h1:eE/nxDuBViPzGmpCFzys08CBC261qp3W6MvAJtgLW1U=
+github.com/claygod/PiHex v0.0.0-20260415170130-c9efef19553c/go.mod h1:4cXG23YcIFeiktveS3VhU09vKH7zp2iM2rxQfli+UbY=
 github.com/d4l3k/go-bfloat16 v0.0.0-20211005043715-690c3bdd05f1 h1:cBzrdJPAFBsgCrDPnZxlp1dF2+k4r1kVpD7+1S1PVjY=
 github.com/d4l3k/go-bfloat16 v0.0.0-20211005043715-690c3bdd05f1/go.mod h1:uw2gLcxEuYUlAd/EXyjc/v55nd3+47YAgWbSXVxPrNI=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

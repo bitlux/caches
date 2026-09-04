@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/claygod/PiHex v0.0.0-20260415170130-c9efef19553c // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/keep94/consume2 v0.7.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
