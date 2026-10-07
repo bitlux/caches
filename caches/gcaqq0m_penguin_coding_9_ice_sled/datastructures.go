@@ -88,6 +88,8 @@ F 3 7 1 F F D 1 D F D D 6 2 4 B 0 4 4 5 2 A 9 4 D F F 8 4 D
 9 4 9 3 9 D 4 D 7 E 7 3 3 1 2 0 D 4 2 2 E D A 8 2 E A E F E`
 )
 
+var _, _ = smallGrid, bigGrid
+
 type Direction int
 
 const (
