@@ -2,13 +2,16 @@
 package cipher
 
 import (
+	"fmt"
+
 	"golang.org/x/exp/constraints"
 )
 
 // ----------------------------------------------------------------------------
 // Substitution ciphers
 
-// A1Encode encodes a rune in the range [A-Za-z] using the A=1, ..., Z=26 substitution cipher.
+// A1Encode encodes a rune in the range [A-Za-z] using the A=1, ..., Z=26
+// substitution cipher.
 func A1Encode[T constraints.Integer](n T) int {
 	if n == ' ' {
 		return int(n)
@@ -19,7 +22,8 @@ func A1Encode[T constraints.Integer](n T) int {
 	return int(n - 'a' + 1)
 }
 
-// A1Decode decodes a number in the range [1-26] using the A=1, ..., Z=26 substitution cipher.
+// A1Decode decodes a number in the range [1-26] using the A=1, ..., Z=26
+// substitution cipher.
 func A1Decode(n int) rune {
 	if n == 0 {
 		return 'Z'
@@ -27,8 +31,8 @@ func A1Decode(n int) rune {
 	return rune(n + 'A' - 1)
 }
 
-// CBF encodes a string into a slice of integers. CBF encoding is similar to A1Encode, but done
-// mod 10.
+// CBF encodes a string into a slice of integers. CBF encoding is similar to
+// A1Encode, but done mod 10.
 func CBF(s string) []int {
 	var ret []int
 	for _, c := range s {
@@ -37,7 +41,8 @@ func CBF(s string) []int {
 	return ret
 }
 
-// ROT rotates w by n letter. ROT(13, "terra") = "green". Currently only handles lowercase letters.
+// ROT rotates w by n letter. ROT(13, "terra") = "green". Currently only handles
+// lowercase letters.
 func ROT(n int, w string) string {
 	ret := ""
 	for _, r := range w {
@@ -48,6 +53,22 @@ func ROT(n int, w string) string {
 		} else {
 			ret += string(r)
 		}
+	}
+	return ret
+}
+
+// CBFOTPDecode performs one-time pad decryption in the manner that cachbefound
+// typically employs it.
+//
+// Unlike with bits, OTP with text is inherently ambiguous: 'A' could reasonably
+// map to 0 or 1, and decryption could add or subtract the key from the
+// ciphertext. CBFOTPDecode treats 'A' as 0 and substracts the key.
+func CBFOTPDecode(ct, key string) string {
+	n := min(len(ct), len(key))
+	ret := ""
+	for i := range n {
+		keyAsNumber := A1Encode(key[i]) - 1
+		ret = fmt.Sprintf("%s%c", ret, A1Decode((A1Encode(ct[i])-keyAsNumber+26)%26))
 	}
 	return ret
 }

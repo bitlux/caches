@@ -79,3 +79,18 @@ func TestTwoSquare(t *testing.T) {
 		t.Errorf("Encode() = %q, want %q", pt2, pt)
 	}
 }
+
+func TestCBFOTPDecode(t *testing.T) {
+	for _, tc := range []struct {
+		ct, key string
+		want    string
+	}{
+		{"BHAGRBINYXISF", "bonsaiburgeon", "ATNORTHTHREES"},
+		{"dpw", "ale", "DES"},
+	} {
+		if got := CBFOTPDecode(tc.ct, tc.key); got != tc.want {
+			t.Errorf("CBFOTPDecode(%s, %s) = %v, want %v", tc.ct, tc.key, got, tc.want)
+		}
+	}
+
+}

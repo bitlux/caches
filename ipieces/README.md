@@ -11,7 +11,7 @@ Available at https://pkg.go.dev/github.com/bitlux/caches/ipieces.
 
 I deploy on [Google Cloud Run](https://cloud.google.com/run).
 https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-go-service is a good
-reference on how to us Google Cloud Run.
+reference on how to use Google Cloud Run.
 
 Create a directory for your project and put your code in a file named `main.go`. Run
 `go mod init <module name>` to create a module (because your `main.go` imports packages outside the
